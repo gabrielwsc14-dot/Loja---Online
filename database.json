@@ -1,0 +1,13 @@
+{
+  "usuarios": [
+    {
+      "id": "admin_01",
+      "nome": "Administrador",
+      "usuario": "admin",
+      "senha": "123", 
+      "role": "admin",
+      "pode_trocar": true
+    }
+  ],
+  "produtos": []
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Realizado - Minha Loja</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .success-container { max-width: 600px; margin: 50px auto; padding: 30px; text-align: center; background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .pix-box { background: #f8f9fa; border: 2px dashed #3483fa; padding: 20px; margin: 20px 0; border-radius: 8px; word-break: break-all; font-family: monospace; font-size: 0.9rem; }
+        .btn-copy { background: #3483fa; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .whatsapp-link { display: inline-block; margin-top: 20px; color: #25d366; font-weight: bold; text-decoration: none; }
+        .icon-check { font-size: 50px; color: #27ae60; }
+    </style>
+</head>
+<body>
+
+    <div class="success-container">
+        <div class="icon-check">✔</div>
+        <h1>Pedido Recebido!</h1>
+        <p>Obrigado por comprar conosco. Seu pedido foi registrado e o estoque foi reservado por 30 minutos.</p>
+
+        <div id="area-pix" style="display: none;">
+            <h3>Pagamento via PIX</h3>
+            <p>Copie o código abaixo para pagar no seu banco:</p>
+            <div class="pix-box" id="pix-codigo"></div>
+            <button class="btn-copy" onclick="copiarPix()">Copiar Código Pix</button>
+        </div>
+
+        <div id="area-cartao" style="display: none;">
+            <h3>Pagamento via Cartão</h3>
+            <p>Seu pagamento está sendo processado pela operadora.</p>
+        </div>
+
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+        
+        <p><strong>Próximo passo:</strong> Envie o comprovante ou tire dúvidas pelo nosso WhatsApp:</p>
+        <a href="https://wa.me/5500000000000" class="whatsapp-link" target="_blank">📱 Enviar Comprovante via WhatsApp</a>
+
+        <br><br>
+        <a href="index.html" style="color: #666;">Voltar para a página inicial</a>
+    </div>
+
+    <script>
+        // Lógica simples para exibir os dados na tela de sucesso
+        document.addEventListener('DOMContentLoaded', () => {
+            const pix = localStorage.getItem('ultimoPix');
+            
+            // Se houver código pix no storage, mostra a área do pix
+            if (pix) {
+                document.getElementById('area-pix').style.display = 'block';
+                document.getElementById('pix-codigo').innerText = pix;
+            } else {
+                document.getElementById('area-cartao').style.display = 'block';
+            }
+        });
+
+        function copiarPix() {
+            const texto = document.getElementById('pix-codigo').innerText;
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("Código Pix copiado!");
+            });
+        }
+    </script>
+</body>
+</html>

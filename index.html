@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace Bebê - Jequitinhonha</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="nav-container">
+            <div class="logo-placeholder">LOGO</div>
+
+            <div class="search-box">
+                <input type="text" placeholder="Buscar produtos, marcas e muito mais...">
+                <button type="submit">🔍</button>
+            </div>
+
+            <nav class="user-nav">
+                <span>Crie sua conta</span>
+                <span id="login-link" style="cursor:pointer">Entre</span>
+                <span class="cart-icon">🛒</span>
+            </nav>
+        </div>
+    </header>
+
+    <div id="modal-cadastro" class="modal">
+        <div class="modal-content">
+            <h3>Crie sua Conta</h3>
+
+            <div class="input-group">
+                <input type="text" id="cad-nome" placeholder="Nome Completo">
+                <small class="error-msg" id="err-nome"></small>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="cad-usuario" placeholder="Nome de Usuário (ex: joao123)">
+                <small class="error-msg" id="err-usuario"></small>
+            </div>
+
+            <div class="input-group">
+                <input type="email" id="cad-email" placeholder="E-mail">
+                <small class="error-msg" id="err-email"></small>
+            </div>
+
+            <div class="input-group">
+                <input type="tel" id="cad-tel" placeholder="Telefone (DD) 99999-9999">
+                <small class="error-msg" id="err-tel"></small>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="cad-senha" placeholder="Crie uma senha">
+                <small class="error-msg" id="err-senha"></small>
+            </div>
+
+            <div class="modal-buttons">
+                <button onclick="fecharCadastro()" class="btn-cancelar">Cancelar</button>
+                <button onclick="validarEFinalizarCadastro()" class="btn-confirmar">Cadastrar</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="content-wrapper">
+        <section class="product-section">
+            <h3 class="section-title">Inspirado no último que você viu</h3>
+
+            <div class="product-grid" id="vitrine-index">
+                <p style="padding: 20px; color: #999;">Nenhum produto cadastrado ainda.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

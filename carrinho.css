@@ -1,0 +1,33 @@
+body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f5f5f5; margin: 0; }
+.container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+
+.cart-header { background: white; padding: 20px; border-bottom: 1px solid #ddd; }
+.cart-header h1 { color: #ee4d2d; margin: 0; font-size: 1.5rem; }
+.cart-header span { font-size: 1.2rem; color: #333; border-left: 1px solid #ccc; padding-left: 15px; }
+
+.cart-container { max-width: 1200px; margin: 30px auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 0 15px; }
+
+.cart-items { background: white; padding: 20px; border-radius: 4px; box-shadow: 0 1px 1px rgba(0,0,0,.05); }
+
+.cart-item { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
+.cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 2px; }
+.item-info { flex: 1; padding: 0 20px; }
+.item-info h4 { margin: 0 0 5px 0; color: #333; }
+.item-price { color: #ee4d2d; font-weight: bold; }
+
+.quantity-control { display: flex; align-items: center; gap: 10px; }
+.quantity-control button { border: 1px solid #ddd; background: white; width: 30px; height: 30px; cursor: pointer; }
+.quantity-control span { min-width: 20px; text-align: center; }
+
+.cart-summary { background: white; padding: 20px; border-radius: 4px; height: fit-content; position: sticky; top: 20px; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.9rem; }
+.summary-row.total { font-size: 1.2rem; font-weight: bold; color: #ee4d2d; margin-top: 15px; }
+
+.btn-checkout { background: #ee4d2d; color: white; border: none; width: 100%; padding: 15px; font-size: 1rem; font-weight: bold; cursor: pointer; border-radius: 2px; text-transform: uppercase; }
+.btn-checkout:hover { background: #d73211; }
+
+.timer-notice { font-size: 0.75rem; color: #666; margin-top: 15px; text-align: center; }
+
+@media (max-width: 768px) {
+    .cart-container { grid-template-columns: 1fr; }
+}

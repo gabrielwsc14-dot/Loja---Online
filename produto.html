@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Detalhes do Produto</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container-produto {
+            max-width: 1100px;
+            margin: 40px auto;
+            display: flex;
+            gap: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .galeria-grande {
+            flex: 1.2;
+        }
+
+        .foto-principal {
+            width: 100%;
+            height: 500px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .miniaturas {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .miniaturas img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 4px;
+        }
+
+        .miniaturas img:hover {
+            border-color: #3483fa;
+        }
+
+        .info-compra {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-comprar {
+            background: #3483fa;
+            color: white;
+            padding: 20px;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+
+        .btn-comprar:hover {
+            background: #2968c8;
+        }
+
+        .frete-box {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-top: 10px;
+        }
+
+        .secao-abaixo {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .scroll-lateral {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+            scroll-behavior: smooth;
+        }
+
+        .scroll-lateral .product-card {
+            min-width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="nav-container">
+            <div class="logo-placeholder" onclick="window.location.href='index.html'" style="cursor:pointer">LOGO</div>
+            <nav class="user-nav"></nav>
+        </div>
+    </header>
+
+    <div id="conteudo-produto">
+        <main class="container-produto">
+            <div class="galeria-grande">
+                <img id="main-img" src="" class="foto-principal">
+                <div id="thumb-list" class="miniaturas"></div>
+            </div>
+
+            <div class="info-compra">
+                <p id="prod-vendidos" style="color: #666; font-size: 0.9rem;"></p>
+                <h1 id="prod-title" style="font-size: 1.8rem;"></h1>
+                <div style="color: #ffb100; font-size: 1.2rem;">⭐⭐⭐⭐⭐</div>
+                <h2 id="prod-price" style="color: #333; font-size: 2.5rem; margin: 10px 0;"></h2>
+                <p id="prod-stock" style="font-weight: bold; color: #27ae60;"></p>
+
+                <div class="frete-box">
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">Calcular Frete</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="cep-input" placeholder="00000-000"
+                            style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; flex: 1;">
+                        <button
+                            onclick="document.getElementById('res-frete').innerText='Frete Grátis para Jequitinhonha!'"
+                            style="padding: 10px; cursor: pointer;">Calcular</button>
+                    </div>
+                    <p id="res-frete" style="margin-top: 10px; color: #27ae60; font-weight: bold;"></p>
+                </div>
+
+                <button class="btn-comprar">ADICIONAR AO CARRINHO</button>
+
+                <button class="btn-comprar" onclick="adicionarAoCarrinhoLocal()">ADICIONAR AO CARRINHO</button>
+            </div>
+        </main>
+
+        <section class="secao-abaixo">
+            <h3>Descrição do Produto</h3>
+            <p id="prod-desc" style="line-height: 1.6; color: #444; margin-top: 10px;"></p>
+
+            <hr style="margin: 40px 0; border: 0; border-top: 1px solid #eee;">
+
+            <h3>Opiniões dos Clientes</h3>
+            <div id="reviews-list" style="margin-top: 20px;"></div>
+
+            <h3 style="margin-top: 50px;">Produtos recomendados</h3>
+            <div id="sugestoes-grid" class="scroll-lateral"></div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        window.onload = () => {
+            const idAtual = localStorage.getItem('produtoAtualID');
+            // Usamos o 'db' que já vem do script.js
+            const p = db.produtos.find(item => item.id == idAtual);
+
+            if (p) {
+                document.getElementById('prod-title').innerText = p.nome;
+                document.getElementById('prod-price').innerText = `R$ ${p.preco}`;
+                document.getElementById('prod-desc').innerText = p.descricao;
+                document.getElementById('prod-stock').innerText = `Estoque disponível: ${p.estoque} unidades`;
+                document.getElementById('prod-vendidos').innerText = `Novo | ${p.vendidos || 0} vendidos`;
+                document.getElementById('main-img').src = p.imagens[0];
+
+                const thumbs = document.getElementById('thumb-list');
+                thumbs.innerHTML = ""; // Limpa antes de preencher
+                p.imagens.forEach(img => {
+                    const i = document.createElement('img');
+                    i.src = img;
+                    i.onclick = () => document.getElementById('main-img').src = img;
+                    thumbs.appendChild(i);
+                });
+
+                // Sugestões (limitado a 6 produtos para não quebrar o layout)
+                const sug = document.getElementById('sugestoes-grid');
+                sug.innerHTML = db.produtos
+                    .filter(item => item.id != idAtual) // Não sugerir o próprio produto
+                    .slice(0, 6)
+                    .map(item => `
+                <div class="product-card" onclick="verProduto(${item.id})" style="cursor:pointer; background:white; padding:10px; border:1px solid #eee; border-radius:8px;">
+                    <img src="${item.imagens[0]}" style="width:100%; height:150px; object-fit:cover;">
+                    <p style="font-size:0.9rem; margin-top:5px;">${item.nome}</p>
+                    <strong style="display:block; margin-top:5px;">R$ ${item.preco}</strong>
+                </div>
+            `).join('');
+            }
+        };
+
+        // Função para disparar a adição ao carrinho
+        window.adicionarAoCarrinhoLocal = () => {
+            const idAtual = localStorage.getItem('produtoAtualID');
+            const produto = db.produtos.find(p => p.id == idAtual);
+
+            if (produto.estoque <= 0) {
+                alert("Desculpe, este produto está sem estoque.");
+                return;
+            }
+
+            const itemExistente = db.carrinho.find(item => item.id == produto.id);
+
+            if (itemExistente) {
+                itemExistente.quantidade++;
+            } else {
+                db.carrinho.push({
+                    id: produto.id,
+                    nome: produto.nome,
+                    preco: parseFloat(produto.preco),
+                    imagem: produto.imagens[0],
+                    quantidade: 1
+                });
+            }
+
+            save(); // Função global do seu script.js
+            alert("Produto adicionado ao carrinho!");
+            window.location.href = "carrinho.html";
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra - Bebê Loja</title>
+    <link rel="stylesheet" href="checkout.css">
+</head>
+<body>
+
+    <main class="checkout-container">
+        <section class="checkout-form">
+            <h2>1. Dados de Entrega</h2>
+            <div id="dados-usuario-box" class="card">
+                </div>
+
+            <h2>2. Método de Pagamento</h2>
+            <div class="payment-methods card">
+                <label class="method-option">
+                    <input type="radio" name="payment" value="pix" checked onclick="togglePaymentFields()">
+                    <span class="dot"></span>
+                    <span class="label-text">PIX (Aprovação imediata)</span>
+                </label>
+                
+                <label class="method-option">
+                    <input type="radio" name="payment" value="cartao" onclick="togglePaymentFields()">
+                    <span class="dot"></span>
+                    <span class="label-text">Cartão de Crédito/Débito</span>
+                </label>
+
+                <div id="cartao-fields" style="display:none; margin-top: 20px;">
+                    <input type="text" placeholder="Número do Cartão" class="input-full">
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" placeholder="Validade (MM/AA)" style="flex:1;">
+                        <input type="text" placeholder="CVV" style="flex:1;">
+                    </div>
+                    <input type="text" placeholder="Nome no Cartão" class="input-full">
+                </div>
+            </div>
+        </section>
+
+        <aside class="checkout-sidebar">
+            <div class="card">
+                <h3>Resumo do Pedido</h3>
+                <div id="resumo-itens"></div>
+                <hr>
+                <div class="total-row">
+                    <span>Total a pagar:</span>
+                    <strong id="total-checkout">R$ 0,00</strong>
+                </div>
+                <button class="btn-finalizar" onclick="processarPedido()">FINALIZAR PEDIDO</button>
+            </div>
+        </aside>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarCheckout();
+        });
+        
+        function togglePaymentFields() {
+            const isCartao = document.querySelector('input[value="cartao"]').checked;
+            document.getElementById('cartao-fields').style.display = isCartao ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

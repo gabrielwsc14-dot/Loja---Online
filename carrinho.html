@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras - Bebê Loja</title>
+    <link rel="stylesheet" href="carrinho.css">
+</head>
+<body>
+
+    <header class="cart-header">
+        <div class="container">
+            <h1 onclick="window.location.href='index.html'" style="cursor:pointer">Bebê Loja</h1>
+            <span>Carrinho de Compras</span>
+        </div>
+    </header>
+
+    <main class="cart-container">
+        <section class="cart-items" id="lista-carrinho">
+            <div class="empty-cart">Seu carrinho está vazio. <a href="index.html">Vá às compras!</a></div>
+        </section>
+
+        <aside class="cart-summary">
+            <h3>Resumo do Pedido</h3>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal">R$ 0,00</span>
+            </div>
+            <div class="summary-row">
+                <span>Frete/Entrega</span>
+                <span style="color: #27ae60;">A calcular</span>
+            </div>
+            <hr>
+            <div class="summary-row total">
+                <span>Total</span>
+                <span id="total-geral">R$ 0,00</span>
+            </div>
+            <button class="btn-checkout" onclick="prosseguirParaCheckout()">Finalizar Compra</button>
+            <p class="timer-notice">⚠️ Os itens serão reservados por 30 minutos após o próximo passo.</p>
+        </aside>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Função específica para renderizar o carrinho ao abrir a página
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarCarrinho();
+        });
+    </script>
+</body>
+</html>
