@@ -157,9 +157,11 @@ window.reservarProduto = (produtoId, quantidade) => {
  */
 window.fazerLogin = () => {
     const identificador = prompt("Entre com seu E-mail, Usuário ou Telefone:");
-    const senhaInformada = prompt("Sua senha:");
+    if (identificador === null) return; // PARA AQUI se apertar cancelar
 
-    // Busca o usuário comparando os 3 campos possíveis
+    const senhaInformada = prompt("Sua senha:");
+    if (senhaInformada === null) return; // PARA AQUI se apertar cancelar
+
     const contaEncontrada = db.usuarios.find(u =>
         (u.email === identificador || u.usuario === identificador || u.telefone === identificador) &&
         u.senha === senhaInformada
@@ -170,32 +172,50 @@ window.fazerLogin = () => {
         alert(`Bem-vindo de volta, ${contaEncontrada.nome || contaEncontrada.usuario}!`);
         location.reload();
     } else {
-        alert("Dados de acesso inválidos. Tente novamente.");
+        alert("Dados de acesso inválidos.");
     }
 };
 
+// Esta função apenas abre o Modal que você criou no HTML
 window.fazerCadastro = () => {
-    const nomeCompleto = prompt("Seu nome completo:");
-    const nomeUsuario = prompt("Escolha um nome de usuário:");
-    const email = prompt("Seu e-mail:");
-    const telefone = prompt("Seu número de telefone:");
-    const senha = prompt("Crie uma senha:");
+    const modal = document.getElementById('modal-cadastro');
+    if (modal) modal.style.display = 'block';
+};
 
-    if (nomeUsuario && email && senha) {
-        const novoUsuario = {
-            id: Date.now(),
-            nome: nomeCompleto,
-            usuario: nomeUsuario,
-            email: email,
-            telefone: telefone,
-            senha: senha,
-            role: "cliente"
-        };
-        db.usuarios.push(novoUsuario);
-        sessionStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario));
-        save();
-        location.reload();
+// Esta função fecha o Modal se apertar cancelar
+window.fecharCadastro = () => {
+    const modal = document.getElementById('modal-cadastro');
+    if (modal) modal.style.display = 'none';
+};
+
+// Esta é a função que o botão "Cadastrar" do Modal deve chamar
+window.validarEFinalizarCadastro = () => {
+    const nome = document.getElementById('cad-nome').value;
+    const usuario = document.getElementById('cad-usuario').value;
+    const email = document.getElementById('cad-email').value;
+    const tel = document.getElementById('cad-tel').value;
+    const senha = document.getElementById('cad-senha').value;
+
+    // Só avança se os campos principais estiverem preenchidos
+    if (!nome || !usuario || !email || !senha) {
+        alert("Por favor, preencha todos os campos obrigatórios.");
+        return; 
     }
+
+    const novoUsuario = {
+        id: Date.now(),
+        nome: nome,
+        usuario: usuario,
+        email: email,
+        telefone: tel,
+        senha: senha,
+        role: "cliente"
+    };
+
+    db.usuarios.push(novoUsuario);
+    sessionStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario));
+    save(); // Salva no banco
+    location.reload(); // Recarrega logado
 };
 
 window.logout = () => {

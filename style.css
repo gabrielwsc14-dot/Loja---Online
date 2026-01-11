@@ -357,49 +357,13 @@ body {
     background: rgba(0, 0, 0, 0.5);
 }
 
-.modal-content {
-    background: white;
-    width: 90%;
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    border-radius: 12px;
-}
-
-.input-group {
-    margin-bottom: 15px;
-}
-
-.input-group input {
+.modal {
+    display: none; /* Começa escondido */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.error-msg {
-    color: #e74c3c;
-    font-size: 0.75rem;
-    display: none;
-    margin-top: 5px;
-    font-weight: bold;
-}
-
-.btn-confirmar {
-    background: #3483fa;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn-cancelar {
-    background: #eee;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5); /* Fundo escuro */
 }
