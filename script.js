@@ -9,7 +9,7 @@ let db = JSON.parse(localStorage.getItem('lojaDB')) || {
             "nome": "Administrador",
             "usuario": "admin",
             "email": "admin@loja.com",
-            "senha": "123", 
+            "senha": "123",
             "role": "admin",
             "dadosCompra": null // Armazenará CPF e Endereço salvos
         }
@@ -49,7 +49,7 @@ async function converterArquivosParaBase64(listaArquivos) {
                 img.src = e.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800; 
+                    const MAX_WIDTH = 800;
                     let width = img.width;
                     let height = img.height;
                     if (width > MAX_WIDTH) {
@@ -134,22 +134,6 @@ window.editarEstoque = (id) => {
     }
 };
 
-window.excluirProduto = (id) => {
-    if (confirm("Tem certeza que deseja remover este produto permanentemente?")) {
-        db.produtos = db.produtos.filter(p => p.id !== id);
-        save();
-    }
-};
-
-window.editarEstoque = (id) => {
-    const produto = db.produtos.find(p => p.id === id);
-    const novoValor = prompt(`Alterar estoque de ${produto.nome}:`, produto.estoque);
-    if (novoValor !== null) {
-        produto.estoque = parseInt(novoValor);
-        save();
-    }
-};
-
 window.reservarProduto = (produtoId, quantidade) => {
     const produto = db.produtos.find(p => p.id === produtoId);
     if (produto.estoque >= quantidade) {
@@ -164,7 +148,7 @@ window.reservarProduto = (produtoId, quantidade) => {
             // pAtual.estoque += quantidade;
             // pAtual.reservados -= quantidade;
             // save();
-        }, 1800000); 
+        }, 1800000);
     }
 };
 
@@ -176,8 +160,8 @@ window.fazerLogin = () => {
     const senhaInformada = prompt("Sua senha:");
 
     // Busca o usuário comparando os 3 campos possíveis
-    const contaEncontrada = db.usuarios.find(u => 
-        (u.email === identificador || u.usuario === identificador || u.telefone === identificador) && 
+    const contaEncontrada = db.usuarios.find(u =>
+        (u.email === identificador || u.usuario === identificador || u.telefone === identificador) &&
         u.senha === senhaInformada
     );
 
@@ -190,94 +174,29 @@ window.fazerLogin = () => {
     }
 };
 
-wwindow.fazerCadastro = () => {
-    document.getElementById('modal-cadastro').style.display = 'block';
-};
+window.fazerCadastro = () => {
+    const nomeCompleto = prompt("Seu nome completo:");
+    const nomeUsuario = prompt("Escolha um nome de usuário:");
+    const email = prompt("Seu e-mail:");
+    const telefone = prompt("Seu número de telefone:");
+    const senha = prompt("Crie uma senha:");
 
-window.fecharCadastro = () => {
-    // Limpa os campos e fecha
-    const campos = ['cad-nome', 'cad-usuario', 'cad-email', 'cad-tel', 'cad-senha'];
-    campos.forEach(id => {
-        document.getElementById(id).value = "";
-        document.getElementById('err-' + id.split('-')[1]).style.display = 'none';
-    });
-    document.getElementById('modal-cadastro').style.display = 'none';
-};
-
-window.validarEFinalizarCadastro = () => {
-    let temErro = false;
-
-    // Pegar valores
-    const nome = document.getElementById('cad-nome').value;
-    const user = document.getElementById('cad-usuario').value;
-    const email = document.getElementById('cad-email').value;
-    const tel = document.getElementById('cad-tel').value;
-    const senha = document.getElementById('cad-senha').value;
-
-    // Resetar mensagens
-    document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
-
-    // 1. Validar Nome (mínimo 2 nomes)
-    if (nome.trim().split(' ').length < 2) {
-        exibirErro('err-nome', 'Digite seu nome e sobrenome real.');
-        temErro = true;
-    }
-
-    // 2. Validar Usuário (Inexistente/Disponível)
-    if (user.length < 3) {
-        exibirErro('err-usuario', 'Usuário muito curto.');
-        temErro = true;
-    } else if (db.usuarios.some(u => u.usuario === user)) {
-        exibirErro('err-usuario', 'Este nome de usuário já está em uso.');
-        temErro = true;
-    }
-
-    // 3. Validar E-mail (Formato correto)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        exibirErro('err-email', 'E-mail inválido (ex: nome@dominio.com).');
-        temErro = true;
-    }
-
-    // 4. Validar Telefone (Formato DDD + 9 números)
-    // Aceita formatos como: 11988887777, (11) 98888-7777, etc.
-    const telLimpo = tel.replace(/\D/g, ''); // Remove tudo que não for número
-    if (telLimpo.length < 10 || telLimpo.length > 11) {
-        exibirErro('err-tel', 'Telefone inválido. Use (DD) 99999-9999.');
-        temErro = true;
-    }
-
-    // 5. Senha
-    if (senha.length < 4) {
-        exibirErro('err-senha', 'A senha deve ter pelo menos 4 dígitos.');
-        temErro = true;
-    }
-
-    if (!temErro) {
+    if (nomeUsuario && email && senha) {
         const novoUsuario = {
             id: Date.now(),
-            nome: nome,
-            usuario: user,
+            nome: nomeCompleto,
+            usuario: nomeUsuario,
             email: email,
-            telefone: telLimpo,
+            telefone: telefone,
             senha: senha,
-            role: "cliente",
-            cpf: "",
-            endereco: ""
+            role: "cliente"
         };
         db.usuarios.push(novoUsuario);
         sessionStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario));
         save();
-        alert("Cadastro realizado com sucesso!");
         location.reload();
     }
 };
-
-function exibirErro(id, msg) {
-    const el = document.getElementById(id);
-    el.innerText = msg;
-    el.style.display = 'block';
-}
 
 window.logout = () => {
     sessionStorage.removeItem('usuarioLogado');
@@ -299,7 +218,7 @@ if (linksMenuAdmin) {
         link.onclick = (e) => {
             e.preventDefault();
             const alvo = link.getAttribute('href').replace('#', '');
-            
+
             document.querySelectorAll('.admin-section').forEach(secao => secao.style.display = 'none');
             const secaoAlvo = document.getElementById(alvo);
             if (secaoAlvo) secaoAlvo.style.display = 'block';
@@ -316,11 +235,11 @@ if (linksMenuAdmin) {
 window.buscarUsuarioParaEquipe = () => {
     const termo = document.getElementById('busca-usuario-equipe').value.toLowerCase();
     const resultadoDiv = document.getElementById('resultado-busca-equipe');
-    
+
     if (!termo) return;
 
     // Procura o usuário no banco (que não seja admin já)
-    const encontrado = db.usuarios.find(u => 
+    const encontrado = db.usuarios.find(u =>
         (u.usuario.toLowerCase() === termo || u.email.toLowerCase() === termo)
     );
 
@@ -328,10 +247,10 @@ window.buscarUsuarioParaEquipe = () => {
         resultadoDiv.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; background: #f0f7ff; padding: 15px; border-radius: 8px; border: 1px solid #cfe2ff;">
                 <span><strong>${encontrado.nome}</strong> (@${encontrado.usuario})</span>
-                ${encontrado.role === 'admin' ? 
-                    '<span style="color: #27ae60; font-weight: bold;">Já é da Equipe</span>' : 
-                    `<button onclick="adicionarAEquipe('${encontrado.id}')" style="background: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">+ Tornar Admin</button>`
-                }
+                ${encontrado.role === 'admin' ?
+                '<span style="color: #27ae60; font-weight: bold;">Já é da Equipe</span>' :
+                `<button onclick="adicionarAEquipe('${encontrado.id}')" style="background: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">+ Tornar Admin</button>`
+            }
             </div>
         `;
     } else {
@@ -355,7 +274,7 @@ window.adicionarAEquipe = (id) => {
 
 window.removerDaEquipe = (email) => {
     if (email === 'admin@loja.com') return alert("O admin principal não pode ser removido.");
-    
+
     if (confirm("Remover acesso administrativo deste usuário?")) {
         const usuario = db.usuarios.find(u => u.email === email);
         if (usuario) usuario.role = 'cliente';
@@ -370,7 +289,7 @@ window.validarDadosCompra = (dados) => {
         alert("Todos os campos (CPF, Endereço e Telefone) são obrigatórios!");
         return false;
     }
-    
+
     // Regra: CPF deve ter 11 dígitos (simples)
     if (dados.cpf.length !== 11) {
         alert("CPF Inválido!");
@@ -422,7 +341,7 @@ window.renderizarCarrinho = () => {
 window.alterarQuantidade = (index, valor) => {
     const item = db.carrinho[index];
     const novaQtd = item.quantidade + valor;
-    
+
     if (novaQtd > 0) {
         const produtoDb = db.produtos.find(p => p.id === item.id);
         if (novaQtd <= produtoDb.estoque) {
@@ -489,9 +408,9 @@ window.renderizarCheckout = () => {
     totalPg.innerText = `R$ ${total.toFixed(2)}`;
 };
 
-wwindow.processarPedido = () => {
+window.processarPedido = () => {
     const userDb = db.usuarios.find(u => u.id === usuarioLogado.id);
-    
+
     // Se não tem dados salvos, pega dos inputs e salva no objeto
     if (!userDb.cpf || !userDb.endereco) {
         const cpf = document.getElementById('compra-cpf').value;
@@ -510,7 +429,7 @@ wwindow.processarPedido = () => {
     }
 
     const metodo = document.querySelector('input[name="payment"]:checked').value;
-    
+
     // Baixa no estoque
     db.carrinho.forEach(item => {
         reservarProduto(item.id, item.quantidade);
@@ -519,7 +438,6 @@ wwindow.processarPedido = () => {
     if (metodo === 'pix') {
         const pixCodigo = "00020126330014BR.GOV.BCB.PIX0111" + (db.configPagamento.pixChave || "CHAVE_NAO_CONFIGURADA");
         alert("Pedido Gerado! Use o código Pix na próxima tela para pagar.");
-        // Guardamos o código para a página de sucesso
         localStorage.setItem('ultimoPix', pixCodigo);
     }
 
@@ -537,7 +455,7 @@ wwindow.processarPedido = () => {
     db.vendas.push(novoPedido);
     db.carrinho = []; // Limpa o carrinho
     save();
-    
+
     window.location.href = "sucesso.html";
 };
 
@@ -551,10 +469,10 @@ window.editarDadosCompra = () => {
 window.salvarConfigPagamento = () => {
     const chave = document.getElementById('admin-pix-key').value;
     const token = document.getElementById('admin-card-token').value;
-    
+
     db.configPagamento.pixChave = chave;
     db.configPagamento.tokenCartao = token;
-    
+
     save();
     alert("Configurações de pagamento atualizadas!");
 };
@@ -626,7 +544,7 @@ window.renderizarFinanceiro = () => {
     if (!listaCorpo) return;
 
     const agora = new Date();
-    
+
     const vendasFiltradas = db.vendas.filter(venda => {
         const dataVenda = new Date(venda.id);
         const diffDias = (agora - dataVenda) / (1000 * 60 * 60 * 24);
@@ -634,7 +552,7 @@ window.renderizarFinanceiro = () => {
         if (filtro === 'hoje') return diffDias < 1;
         if (filtro === '7dias') return diffDias <= 7;
         if (filtro === '30dias') return diffDias <= 30;
-        return true; 
+        return true;
     });
 
     let totalFaturamento = 0;
@@ -643,7 +561,7 @@ window.renderizarFinanceiro = () => {
     listaCorpo.innerHTML = vendasFiltradas.map(venda => {
         const valorLimpo = parseFloat(venda.total.replace('R$', '').replace('.', '').replace(',', '.'));
         totalFaturamento += valorLimpo;
-        
+
         const qtdItens = venda.itens.reduce((acc, item) => acc + item.quantidade, 0);
         totalItensVendidos += qtdItens;
 
@@ -658,8 +576,8 @@ window.renderizarFinanceiro = () => {
     }).join('');
 
     // Atualiza os indicadores no topo
-    if(document.getElementById('fin-faturamento')) {
-        document.getElementById('fin-faturamento').innerText = `R$ ${totalFaturamento.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+    if (document.getElementById('fin-faturamento')) {
+        document.getElementById('fin-faturamento').innerText = `R$ ${totalFaturamento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
         document.getElementById('fin-pedidos').innerText = vendasFiltradas.length;
         document.getElementById('fin-ticket').innerText = `Itens: ${totalItensVendidos}`;
     }
@@ -718,7 +636,7 @@ function render() {
             <div class="product-card" onclick="verProduto(${p.id})">
                 <img src="${p.imagens[0]}" style="width:100%; height:180px; object-fit:cover; border-radius:8px;">
                 <h4>${p.nome}</h4>
-                <p class="price">R$ ${parseFloat(p.preco).toFixed(2).replace('.',',')}</p>
+                <p class="price">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</p>
                 <button class="btn-ver">Ver Detalhes</button>
             </div>
         `).join('');
@@ -743,7 +661,7 @@ function render() {
 
     if (document.getElementById('lista-vendas-admin')) renderizarVendasAdmin();
     if (document.getElementById('financeiro')) renderizarFinanceiro();
-    
+
     // Lista de Equipe
     const listaEquipe = document.getElementById('lista-equipe');
     if (listaEquipe) {
@@ -764,7 +682,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Garante que o banco não quebre se faltar alguma chave nova
     if (!db.vendas) db.vendas = [];
     if (!db.carrinho) db.carrinho = [];
-    
+
     render();
 });
 
