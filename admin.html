@@ -72,23 +72,16 @@
             </div>
         </section>
 
-        <section id="config-pagamento" class="admin-section" style="display:none;">
-            <h2>Configurações de Pagamento</h2>
-            <div class="card" style="background: white; padding: 20px; border-radius: 8px;">
-                <p>Defina como seus clientes irão pagar:</p>
+        <section id="config-pagamento" class="admin-section">
+            <h1>Configurar Intermediário (Mercado Pago)</h1>
+            <div class="card">
+                <label>Sua Public Key (Chave Pública):</label>
+                <input type="text" id="admin-pix-key" placeholder="APP_USR-xxxx..." class="input-full">
 
-                <label>Sua Chave PIX (E-mail, CPF ou Celular):</label>
-                <input type="text" id="admin-pix-key" class="input-full" placeholder="Ex: financeiro@sualoja.com">
+                <label>Seu Access Token (Chave Privada):</label>
+                <input type="text" id="admin-card-token" placeholder="PROD_ACCESS_TOKEN..." class="input-full">
 
-                <label>Token de Cartão (Gateway):</label>
-                <input type="text" id="admin-card-token" class="input-full" placeholder="Cole seu token aqui">
-
-                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-                <button onclick="salvarConfigPagamento()" class="btn-salvar"
-                    style="background:#27ae60; color:white; border:none; padding:12px 25px; border-radius:4px; cursor:pointer; font-weight:bold;">
-                    Salvar Configurações
-                </button>
+                <button onclick="salvarConfigPagamento()" class="btn">Salvar Chaves</button>
             </div>
         </section>
 

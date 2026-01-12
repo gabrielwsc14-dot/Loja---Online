@@ -453,49 +453,54 @@ window.renderizarCheckout = () => {
     totalPg.innerText = `R$ ${total.toFixed(2)}`;
 };
 
-window.processarPedido = () => {
+window.processarPedido = async () => {
     const userDb = db.usuarios.find(u => u.id === usuarioLogado.id);
+    const publicKey = db.configPagamento.pixChave; // Usando o campo que você já tem
 
-    // Se não tem dados salvos, pega dos inputs e salva no objeto
-    if (!userDb.cpf || !userDb.endereco) {
-        const cpf = document.getElementById('compra-cpf').value;
-        const tel = document.getElementById('compra-tel').value;
-        const end = document.getElementById('compra-end').value;
-
-        if (cpf.length < 11 || !end || !tel) {
-            return alert("Por favor, preencha todos os campos obrigatórios corretamente.");
-        }
-
-        // Salva para futuras compras
-        userDb.cpf = cpf;
-        userDb.telefone = tel;
-        userDb.endereco = end;
-        save();
+    if (!publicKey) {
+        alert("Erro: O administrador não configurou as chaves de pagamento.");
+        return;
     }
 
-    const metodo = document.querySelector('input[name="payment"]:checked').value;
+    // 1. Inicializa o Mercado Pago
+    const mp = new MercadoPago(publicKey);
 
-    // Baixa no estoque
-    db.carrinho.forEach(item => {
-        reservarProduto(item.id, item.quantidade);
-    });
+    // 2. Prepara os itens do carrinho para o formato que o banco entende
+    const itensParaPagamento = db.carrinho.map(item => ({
+        title: item.nome,
+        unit_price: Number(item.preco),
+        quantity: Number(item.quantidade),
+        currency_id: 'BRL'
+    }));
 
-    if (metodo === 'pix') {
-        // Se você não configurou nada no Admin, usa um aviso
-        const chaveDestino = db.configPagamento?.pixChave || "CHAVE_NAO_CONFIGURADA";
+    // IMPORTANTE: Em um site real, a "Preferência de Pagamento" 
+    // deve ser criada em um servidor para segurança. 
+    // Como você está fazendo experimental, o banco oferece um botão de checkout.
+    
+    alert("Você será redirecionado para o ambiente seguro de pagamento.");
+    
+    // Aqui você faria uma chamada para criar o link de pagamento
+    // Por enquanto, vamos manter a criação do pedido no seu banco local:
+    finalizarVendaLocal(userDb);
+};
 
-        // Aqui montamos o "Copia e Cola" dinâmico
-        const pixCopiaECola = `00020126330014BR.GOV.BCB.PIX0111${chaveDestino}5204000053039865802BR5913NOME_DA_LOJA6008CIDADE62070503***6304`;
+function finalizarVendaLocal(userDb) {
+    const novoPedido = {
+        id: Date.now(),
+        cliente: userDb.nome,
+        itens: [...db.carrinho],
+        total: document.getElementById('total-checkout').innerText,
+        status: "Pendente",
+        data: new Date().toLocaleString()
+    };
+    db.vendas.push(novoPedido);
+    db.carrinho = [];
+    save();
+    window.location.href = "sucesso.html";
+}
 
-        // Guarda para mostrar na tela de sucesso
-        localStorage.setItem('ultimoPix', pixCopiaECola);
-
-        // Link para gerar um QR Code visual (usando uma API gratuita)
-        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(pixCopiaECola)}`;
-        localStorage.setItem('ultimoQrCode', qrCodeUrl);
-    }
-
-    // Cria o registro da venda
+// Função auxiliar para limpar o código
+function finalizarRegistroPedido(metodo, userDb) {
     const novoPedido = {
         id: Date.now(),
         cliente: userDb.nome,
@@ -503,15 +508,15 @@ window.processarPedido = () => {
         total: document.getElementById('total-checkout').innerText,
         status: "Aguardando Pagamento",
         metodo: metodo,
-        data: new Date().toLocaleString()
+        data: new Date().toLocaleString(),
+        dataTimestamp: Date.now()
     };
 
     db.vendas.push(novoPedido);
-    db.carrinho = []; // Limpa o carrinho
+    db.carrinho = [];
     save();
-
     window.location.href = "sucesso.html";
-};
+}
 
 window.editarDadosCompra = () => {
     const userDb = db.usuarios.find(u => u.id === usuarioLogado.id);
