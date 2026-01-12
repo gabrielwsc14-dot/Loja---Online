@@ -218,7 +218,7 @@ window.validarEFinalizarCadastro = () => {
         alert("O nome completo é muito curto.");
         return;
     }
-    
+
     if (senha.length < 4) {
         alert("A senha deve ter pelo menos 4 caracteres.");
         return;
@@ -479,9 +479,18 @@ window.processarPedido = () => {
     });
 
     if (metodo === 'pix') {
-        const pixCodigo = "00020126330014BR.GOV.BCB.PIX0111" + (db.configPagamento.pixChave || "CHAVE_NAO_CONFIGURADA");
-        alert("Pedido Gerado! Use o código Pix na próxima tela para pagar.");
-        localStorage.setItem('ultimoPix', pixCodigo);
+        // Se você não configurou nada no Admin, usa um aviso
+        const chaveDestino = db.configPagamento?.pixChave || "CHAVE_NAO_CONFIGURADA";
+
+        // Aqui montamos o "Copia e Cola" dinâmico
+        const pixCopiaECola = `00020126330014BR.GOV.BCB.PIX0111${chaveDestino}5204000053039865802BR5913NOME_DA_LOJA6008CIDADE62070503***6304`;
+
+        // Guarda para mostrar na tela de sucesso
+        localStorage.setItem('ultimoPix', pixCopiaECola);
+
+        // Link para gerar um QR Code visual (usando uma API gratuita)
+        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(pixCopiaECola)}`;
+        localStorage.setItem('ultimoQrCode', qrCodeUrl);
     }
 
     // Cria o registro da venda
@@ -509,16 +518,39 @@ window.editarDadosCompra = () => {
     renderizarCheckout();
 };
 
+// --- FUNÇÕES DO PAINEL ADMIN ---
+
 window.salvarConfigPagamento = () => {
-    const chave = document.getElementById('admin-pix-key').value;
-    const token = document.getElementById('admin-card-token').value;
+    // Pega os valores dos inputs do seu HTML de Admin
+    const chavePix = document.getElementById('admin-pix-key').value;
+    const tokenCartao = document.getElementById('admin-card-token').value;
 
-    db.configPagamento.pixChave = chave;
-    db.configPagamento.tokenCartao = token;
+    // Se o objeto de configurações não existir no banco, a gente cria
+    if (!db.configPagamento) {
+        db.configPagamento = {};
+    }
 
-    save();
-    alert("Configurações de pagamento atualizadas!");
+    // Salva os dados
+    db.configPagamento.pixChave = chavePix;
+    db.configPagamento.cartaoToken = tokenCartao;
+
+    save(); // Esta é a sua função que dá o localStorage.setItem
+    alert("Configurações de pagamento salvas com sucesso!");
 };
+
+// --- AJUSTE NA HORA DA COMPRA (Checkout) ---
+
+// Procure sua função de processarPedido e verifique se a parte do Pix está assim:
+// Ela precisa ler a chave que você salvou no Admin
+if (metodo === 'pix') {
+    const chaveConfigurada = db.configPagamento?.pixChave || "financeiro@sualoja.com";
+
+    // Gera o código "Copia e Cola" (Simulado, mas usando sua chave)
+    const pixCodigo = `00020126330014BR.GOV.BCB.PIX0111${chaveConfigurada}5204000053039865802BR5913LOJA_BEBE6008CIDADE62070503***6304`;
+
+    // Salva no localStorage para a página de sucesso ler
+    localStorage.setItem('ultimoPix', pixCodigo);
+}
 
 window.renderizarVendasAdmin = () => {
     const listaVendas = document.getElementById('lista-vendas-admin');
