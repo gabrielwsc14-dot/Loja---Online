@@ -669,57 +669,66 @@ window.verProduto = (id) => {
 function render() {
     // 7.1 HEADER DINÂMICO (Dentro da função render no seu script.js)
     // 7.1 HEADER DINÂMICO
+// 7.1 HEADER DINÂMICO
 const containerNav = document.querySelector('.user-nav');
 if (containerNav) {
     if (usuarioLogado) {
         containerNav.innerHTML = `
         <div class="user-profile-wrapper" style="position: relative; display: flex; align-items: center; gap: 15px;">
-            
             <div class="avatar-wheel" onclick="document.getElementById('profile-dropdown').classList.toggle('show')" style="width:40px; height:40px; background:#3483fa; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold;">
                 ${usuarioLogado.usuario.charAt(0).toUpperCase()}
             </div>
 
             <div id="profile-dropdown" class="profile-menu-content">
                 <div class="menu-header">Olá, ${usuarioLogado.usuario}</div>
-                
                 <a href="pedidos.html">📦 Meus Pedidos</a>
-                
                 ${usuarioLogado.role === 'admin' ? '<a href="admin.html" style="color: #27ae60; font-weight: bold;">⚙️ Painel Admin</a>' : ''}
                 <hr>
                 <a href="#" onclick="logout()" style="color: red;">Sair</a>
             </div>
         </div>
         <span class="cart-icon" style="cursor:pointer" onclick="window.location.href='carrinho.html'">🛒</span>
-    `;
-            // ... resto do código da injeção de estilo ...
-            // Injeção de CSS para o Dropdown
-            if (!document.getElementById('perfil-style')) {
-                const style = document.createElement('style');
-                style.id = 'perfil-style';
-                style.innerHTML = `.profile-menu-content { position: absolute; top: 50px; right: 0; background: white; border: 1px solid #ddd; box-shadow: 0 8px 16px rgba(0,0,0,0.1); padding: 10px; border-radius: 8px; display: none; min-width: 180px; z-index: 9999; } .profile-menu-content.show { display: block; } .profile-menu-content a { display: block; padding: 10px; color: #333; text-decoration: none; font-size: 0.9rem; } .menu-header { padding: 10px; font-weight: bold; border-bottom: 1px solid #eee; }`;
-                document.head.appendChild(style);
-            }
-        } else {
-            containerNav.innerHTML = `
-                <span onclick="fazerCadastro()" style="cursor:pointer">Crie sua conta</span>
-                <span onclick="fazerLogin()" style="cursor:pointer; margin-left:15px;">Entre</span>
-                <span class="cart-icon" style="cursor:pointer; margin-left:15px;" onclick="window.location.href='carrinho.html'">🛒</span>
-            `;
-        }
-    }
+        `;
 
-    // 7.2 VITRINE (PÁGINA INICIAL)
-    const vitrine = document.getElementById('vitrine-index');
-    if (vitrine) {
-        vitrine.innerHTML = db.produtos.map(p => `
-            <div class="product-card" onclick="verProduto(${p.id})">
-                <img src="${p.imagens[0]}" style="width:100%; height:180px; object-fit:cover; border-radius:8px;">
-                <h4>${p.nome}</h4>
-                <p class="price">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</p>
-                <button class="btn-ver">Ver Detalhes</button>
-            </div>
-        `).join('');
+        // Injeção de CSS (Executa apenas se o usuário estiver logado e o estilo não existir)
+        if (!document.getElementById('perfil-style')) {
+            const style = document.createElement('style');
+            style.id = 'perfil-style';
+            style.innerHTML = `
+                .profile-menu-content { position: absolute; top: 50px; right: 0; background: white; border: 1px solid #ddd; box-shadow: 0 8px 16px rgba(0,0,0,0.1); padding: 10px; border-radius: 8px; display: none; min-width: 180px; z-index: 9999; } 
+                .profile-menu-content.show { display: block; } 
+                .profile-menu-content a { display: block; padding: 10px; color: #333; text-decoration: none; font-size: 0.9rem; } 
+                .menu-header { padding: 10px; font-weight: bold; border-bottom: 1px solid #eee; }
+                @media (max-width: 768px) {
+                    .profile-menu-content { right: 50%; transform: translateX(50%); width: 250px; max-width: 90vw; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    } else {
+        // Caso NÃO esteja logado (Isso é importante para não quebrar o layout)
+        containerNav.innerHTML = `
+            <span onclick="fazerCadastro()" style="cursor:pointer">Crie sua conta</span>
+            <span onclick="fazerLogin()" style="cursor:pointer; margin-left:15px;">Entre</span>
+            <span class="cart-icon" style="cursor:pointer; margin-left:15px;" onclick="window.location.href='carrinho.html'">🛒</span>
+        `;
     }
+} // <--- Aqui fecha o if(containerNav)
+
+// 7.2 VITRINE (PÁGINA INICIAL) - Agora fora dos blocos de login
+const vitrine = document.getElementById('vitrine-index');
+if (vitrine) {
+    vitrine.innerHTML = db.produtos.map(p => `
+        <div class="product-card" onclick="verProduto(${p.id})">
+            <img src="${p.imagens[0]}" style="width:100%; height:180px; object-fit:cover; border-radius:8px;">
+            <h4>${p.nome}</h4>
+            <p class="price">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</p>
+            <button class="btn-ver">Ver Detalhes</button>
+        </div>
+    `).join('');
+}
+
+// ... Restante do código (Área Administrativa, Equipe, etc) ...
 
     // 7.3 ÁREA ADMINISTRATIVA
     if (document.getElementById('product-table-body')) {
