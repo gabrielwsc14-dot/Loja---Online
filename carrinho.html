@@ -41,10 +41,13 @@
     </main>
 
     <script src="script.js"></script>
+    <script src="main.js"></script>
     <script>
-        // Função específica para renderizar o carrinho ao abrir a página
+        // Agora o main.js cuidará de chamar a renderização correta
         document.addEventListener('DOMContentLoaded', () => {
-            renderizarCarrinho();
+            if (typeof renderizarCarrinhoComSelecao === 'function') {
+                renderizarCarrinhoComSelecao();
+            }
         });
     </script>
 </body>
