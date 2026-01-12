@@ -26,7 +26,8 @@ let db = JSON.parse(localStorage.getItem('lojaDB')) || {
 };
 
 // Estado do Usuário na sessão atual
-let usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado')) || null;
+// Mudamos de sessionStorage para localStorage para o login ser permanente
+let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')) || null;
 
 /**
  * 2. PERSISTÊNCIA E SINCRONIZAÇÃO
@@ -168,11 +169,10 @@ window.fazerLogin = () => {
     );
 
     if (contaEncontrada) {
-        sessionStorage.setItem('usuarioLogado', JSON.stringify(contaEncontrada));
+        // Aqui também: troque sessionStorage por localStorage
+        localStorage.setItem('usuarioLogado', JSON.stringify(contaEncontrada));
         alert(`Bem-vindo de volta, ${contaEncontrada.nome || contaEncontrada.usuario}!`);
         location.reload();
-    } else {
-        alert("Dados de acesso inválidos.");
     }
 };
 
@@ -236,7 +236,7 @@ window.validarEFinalizarCadastro = () => {
     };
 
     db.usuarios.push(novoUsuario);
-    sessionStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario));
+    localStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario)); // Aqui também
     save();
     location.reload();
 };
@@ -249,9 +249,9 @@ window.logout = () => {
 /**
  * 6. NAVEGAÇÃO ENTRE PÁGINAS
  */
-window.verProduto = (id) => {
-    localStorage.setItem('produtoAtualID', id);
-    window.location.href = "produto.html";
+window.logout = () => {
+    localStorage.removeItem('usuarioLogado'); // Limpa do localStorage
+    window.location.href = "index.html";
 };
 
 // Navegação das abas do Admin.html
