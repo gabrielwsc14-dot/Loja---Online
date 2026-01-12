@@ -179,43 +179,66 @@ window.fazerLogin = () => {
 // Esta função apenas abre o Modal que você criou no HTML
 window.fazerCadastro = () => {
     const modal = document.getElementById('modal-cadastro');
-    if (modal) modal.style.display = 'block';
+    if (modal) {
+        modal.style.display = 'block'; // Ou 'flex' se usar o CSS acima
+    }
 };
 
-// Esta função fecha o Modal se apertar cancelar
 window.fecharCadastro = () => {
     const modal = document.getElementById('modal-cadastro');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+    }
 };
 
 // Esta é a função que o botão "Cadastrar" do Modal deve chamar
 window.validarEFinalizarCadastro = () => {
-    const nome = document.getElementById('cad-nome').value;
-    const usuario = document.getElementById('cad-usuario').value;
-    const email = document.getElementById('cad-email').value;
-    const tel = document.getElementById('cad-tel').value;
-    const senha = document.getElementById('cad-senha').value;
+    const nome = document.getElementById('cad-nome').value.trim();
+    const usuario = document.getElementById('cad-usuario').value.trim();
+    const email = document.getElementById('cad-email').value.trim();
+    const tel = document.getElementById('cad-tel').value.trim();
+    const senha = document.getElementById('cad-senha').value.trim();
 
-    // Só avança se os campos principais estiverem preenchidos
-    if (!nome || !usuario || !email || !senha) {
-        alert("Por favor, preencha todos os campos obrigatórios.");
-        return; 
+    // 1. Validação de E-mail (Verifica formato nome@dominio.com)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert("Por favor, insira um e-mail válido (ex: nome@email.com)");
+        return;
     }
 
+    // 2. Validação de Telefone (Apenas números, entre 10 e 11 dígitos)
+    const telApenasNumeros = tel.replace(/\D/g, ''); // Remove letras e parênteses
+    if (telApenasNumeros.length < 10 || telApenasNumeros.length > 11) {
+        alert("O telefone deve ter DDD + número (ex: 33988887777) e não conter letras.");
+        return;
+    }
+
+    // 3. Validação de Segurança Básica
+    if (nome.length < 3) {
+        alert("O nome completo é muito curto.");
+        return;
+    }
+    
+    if (senha.length < 4) {
+        alert("A senha deve ter pelo menos 4 caracteres.");
+        return;
+    }
+
+    // Se passou em tudo, salva
     const novoUsuario = {
         id: Date.now(),
         nome: nome,
         usuario: usuario,
         email: email,
-        telefone: tel,
+        telefone: telApenasNumeros, // Salva limpo, só os números
         senha: senha,
         role: "cliente"
     };
 
     db.usuarios.push(novoUsuario);
     sessionStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario));
-    save(); // Salva no banco
-    location.reload(); // Recarrega logado
+    save();
+    location.reload();
 };
 
 window.logout = () => {
