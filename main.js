@@ -103,9 +103,11 @@ window.gerarNovoPedido = (itens, total) => {
 };
 
 // Inicialização leve
+// No final do seu main.js (ou pedidos.js)
 document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('lista-pedidos')) renderizarPedidos();
-    // Se estiver no carrinho, a função do HTML vai chamar a renderização
+    if (document.getElementById('lista-pedidos')) {
+        renderizarPedidos(); // Chama a função que você criou para desenhar os pedidos
+    }
 });
 
 window.filtrarPedidos = (status, btn) => {
