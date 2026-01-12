@@ -235,10 +235,10 @@ window.validarEFinalizarCadastro = () => {
         role: "cliente"
     };
 
- // ... final da função validarEFinalizarCadastro ...
+    // ... final da função validarEFinalizarCadastro ...
     db.usuarios.push(novoUsuario);
     // Mudamos para localStorage para o cadastro já logar permanentemente
-    localStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario)); 
+    localStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario));
     save();
     location.reload();
 };
@@ -248,8 +248,8 @@ window.validarEFinalizarCadastro = () => {
  */
 window.logout = () => {
     // Removemos de AMBOS para garantir que não sobre rastro da sessão
-    sessionStorage.removeItem('usuarioLogado'); 
-    localStorage.removeItem('usuarioLogado'); 
+    sessionStorage.removeItem('usuarioLogado');
+    localStorage.removeItem('usuarioLogado');
     window.location.href = "index.html";
 };
 // Navegação das abas do Admin.html
@@ -649,6 +649,15 @@ window.renderizarFinanceiro = () => {
     if (vendasFiltradas.length === 0) {
         listaCorpo.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:20px;'>Nenhuma venda no período.</td></tr>";
     }
+};
+
+/**
+ * FUNÇÃO PARA ABRIR PÁGINA DO PRODUTO
+ */
+window.verProduto = (id) => {
+    // Salvamos apenas o ID para o produto.html buscar no banco atualizado
+    localStorage.setItem('produtoAtualID', id);
+    window.location.href = "produto.html";
 };
 
 /**
