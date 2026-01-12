@@ -796,3 +796,5 @@ function render() {
                 }
             }
         };
+    };
+};
