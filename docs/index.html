@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Manual do Administrador - Loja</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 40px 20px; background-color: #f0f2f5; }
+        .header { text-align: center; margin-bottom: 40px; background: #3483fa; color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 5px solid #3483fa; }
+        h1, h2 { margin-top: 0; }
+        .step { display: inline-block; width: 25px; height: 25px; background: #3483fa; color: white; text-align: center; border-radius: 50%; font-size: 14px; font-weight: bold; margin-right: 10px; }
+        code { background: #e9ecef; padding: 3px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: #d63384; }
+        .warning-card { background: #fff3cd; border-left-color: #ffc107; color: #856404; }
+        .tip { font-size: 0.9em; color: #666; font-style: italic; margin-top: 10px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🛠 Guia de Suporte do Administrador</h1>
+        <p>Instruções para manter o site funcionando corretamente.</p>
+    </div>
+
+    <div class="card warning-card">
+        <h2>⚠️ Aviso de Segurança (Muito Importante)</h2>
+        <p>Esta loja salva tudo no <strong>Navegador</strong> (LocalStorage). Se você formatar o computador ou limpar os dados do navegador (histórico/cache), você <strong>perderá todos os produtos e vendas</strong>.</p>
+        <p><strong>Dica:</strong> Uma vez por semana, verifique suas vendas e anote o que for importante em uma planilha separada.</p>
+    </div>
+
+    <div class="card">
+        <h2>💳 Ativar Pagamento Real</h2>
+        <p><span class="step">1</span> Crie conta no Mercado Pago Developers.</p>
+        <p><span class="step">2</span> Vá em "Suas Aplicações" > "Credenciais de Produção".</p>
+        <p><span class="step">3</span> Copie a <code>Public Key</code>.</p>
+        <p><span class="step">4</span> No Painel da Loja, aba <strong>Pagamento</strong>, cole no primeiro campo.</p>
+        <p><span class="step">5</span> Salve. O botão "Pagar" da loja passará a ser real automaticamente.</p>
+    </div>
+
+    <div class="card">
+        <h2>🖼️ Cadastro de Produtos</h2>
+        <p>Para o site não ficar "bagunçado", tente seguir estas regras:</p>
+        <ul>
+            <li><strong>Imagens:</strong> Use fotos tiradas com o celular em pé ou quadradas.</li>
+            <li><strong>Tamanho:</strong> Não use fotos muito pesadas (acima de 5MB), pois o navegador pode travar ao carregar.</li>
+            <li><strong>Estoque:</strong> Se um cliente gerar um PIX e desistir, o produto ficará "reservado" por 30 minutos. Depois disso, você deve ir no estoque e devolver a unidade manualmente se necessário.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>🆘 Suporte em Caso de Pane</h2>
+        <p>Se o painel Admin não abrir ou der erro:</p>
+        <ol>
+            <li>Verifique se o arquivo <code>script.js</code> está na mesma pasta que o <code>admin.html</code>.</li>
+            <li>Aperte <code>F5</code> para recarregar a página.</li>
+            <li>Certifique-se de que não há letras nos campos de "Preço" ou "Estoque" ao cadastrar um produto.</li>
+        </ol>
+    </div>
+
+</body>
+</html>
