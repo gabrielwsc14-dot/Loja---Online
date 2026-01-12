@@ -235,25 +235,23 @@ window.validarEFinalizarCadastro = () => {
         role: "cliente"
     };
 
+ // ... final da função validarEFinalizarCadastro ...
     db.usuarios.push(novoUsuario);
-    localStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario)); // Aqui também
+    // Mudamos para localStorage para o cadastro já logar permanentemente
+    localStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario)); 
     save();
     location.reload();
 };
 
-window.logout = () => {
-    sessionStorage.removeItem('usuarioLogado');
-    window.location.href = "index.html";
-};
-
 /**
- * 6. NAVEGAÇÃO ENTRE PÁGINAS
+ * 6. NAVEGAÇÃO E LOGOUT
  */
 window.logout = () => {
-    localStorage.removeItem('usuarioLogado'); // Limpa do localStorage
+    // Removemos de AMBOS para garantir que não sobre rastro da sessão
+    sessionStorage.removeItem('usuarioLogado'); 
+    localStorage.removeItem('usuarioLogado'); 
     window.location.href = "index.html";
 };
-
 // Navegação das abas do Admin.html
 const linksMenuAdmin = document.querySelectorAll('.nav-link');
 if (linksMenuAdmin) {
@@ -541,16 +539,7 @@ window.salvarConfigPagamento = () => {
 // --- AJUSTE NA HORA DA COMPRA (Checkout) ---
 
 // Procure sua função de processarPedido e verifique se a parte do Pix está assim:
-// Ela precisa ler a chave que você salvou no Admin
-if (metodo === 'pix') {
-    const chaveConfigurada = db.configPagamento?.pixChave || "financeiro@sualoja.com";
-
-    // Gera o código "Copia e Cola" (Simulado, mas usando sua chave)
-    const pixCodigo = `00020126330014BR.GOV.BCB.PIX0111${chaveConfigurada}5204000053039865802BR5913LOJA_BEBE6008CIDADE62070503***6304`;
-
-    // Salva no localStorage para a página de sucesso ler
-    localStorage.setItem('ultimoPix', pixCodigo);
-}
+// Ela precisa ler a chave que você salvou no Admi
 
 window.renderizarVendasAdmin = () => {
     const listaVendas = document.getElementById('lista-vendas-admin');
