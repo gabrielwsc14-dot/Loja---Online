@@ -669,10 +669,10 @@ window.verProduto = (id) => {
 function render() {
     // 7.1 HEADER DINÂMICO (Dentro da função render no seu script.js)
     // 7.1 HEADER DINÂMICO
-    const containerNav = document.querySelector('.user-nav');
-    if (containerNav) {
-        if (usuarioLogado) {
-            containerNav.innerHTML = `
+const containerNav = document.querySelector('.user-nav');
+if (containerNav) {
+    if (usuarioLogado) {
+        containerNav.innerHTML = `
         <div class="user-profile-wrapper" style="position: relative; display: flex; align-items: center; gap: 15px;">
             
             <div class="avatar-wheel" onclick="document.getElementById('profile-dropdown').classList.toggle('show')" style="width:40px; height:40px; background:#3483fa; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold;">
@@ -693,47 +693,25 @@ function render() {
     `;
             // ... resto do código da injeção de estilo ...
             // Injeção de CSS para o Dropdown
-            // Injeção de CSS para o Dropdown (Atualizado para ser responsivo)
             if (!document.getElementById('perfil-style')) {
                 const style = document.createElement('style');
                 style.id = 'perfil-style';
-                style.innerHTML = `
-        /* Estilo padrão (Computador) */
-        .profile-menu-content { 
-            position: absolute; 
-            top: 50px; 
-            right: 0; 
-            background: white; 
-            border: 1px solid #ddd; 
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
-            padding: 10px; 
-            border-radius: 8px; 
-            display: none; 
-            min-width: 180px; 
-            z-index: 9999; 
-        } 
-        
-        .profile-menu-content.show { display: block; } 
-        .profile-menu-content a { display: block; padding: 10px; color: #333; text-decoration: none; font-size: 0.9rem; } 
-        .menu-header { padding: 10px; font-weight: bold; border-bottom: 1px solid #eee; }
-
-        /* Ajuste específico para Mobile (Telas menores que 768px) */
-        @media (max-width: 768px) {
-            .profile-menu-content {
-                right: 50%;
-                transform: translateX(50%); /* Centraliza perfeitamente baseado na largura do menu */
-                width: 90vw; /* Garante que não fique maior que a tela do celular */
-                max-width: 280px;
-            }
-        }
-    `;
+                style.innerHTML = `.profile-menu-content { position: absolute; top: 50px; right: 0; background: white; border: 1px solid #ddd; box-shadow: 0 8px 16px rgba(0,0,0,0.1); padding: 10px; border-radius: 8px; display: none; min-width: 180px; z-index: 9999; } .profile-menu-content.show { display: block; } .profile-menu-content a { display: block; padding: 10px; color: #333; text-decoration: none; font-size: 0.9rem; } .menu-header { padding: 10px; font-weight: bold; border-bottom: 1px solid #eee; }`;
                 document.head.appendChild(style);
             }
+        } else {
+            containerNav.innerHTML = `
+                <span onclick="fazerCadastro()" style="cursor:pointer">Crie sua conta</span>
+                <span onclick="fazerLogin()" style="cursor:pointer; margin-left:15px;">Entre</span>
+                <span class="cart-icon" style="cursor:pointer; margin-left:15px;" onclick="window.location.href='carrinho.html'">🛒</span>
+            `;
+        }
+    }
 
-            // 7.2 VITRINE (PÁGINA INICIAL)
-            const vitrine = document.getElementById('vitrine-index');
-            if (vitrine) {
-                vitrine.innerHTML = db.produtos.map(p => `
+    // 7.2 VITRINE (PÁGINA INICIAL)
+    const vitrine = document.getElementById('vitrine-index');
+    if (vitrine) {
+        vitrine.innerHTML = db.produtos.map(p => `
             <div class="product-card" onclick="verProduto(${p.id})">
                 <img src="${p.imagens[0]}" style="width:100%; height:180px; object-fit:cover; border-radius:8px;">
                 <h4>${p.nome}</h4>
@@ -741,12 +719,12 @@ function render() {
                 <button class="btn-ver">Ver Detalhes</button>
             </div>
         `).join('');
-            }
+    }
 
-            // 7.3 ÁREA ADMINISTRATIVA
-            if (document.getElementById('product-table-body')) {
-                const corpoTabela = document.getElementById('product-table-body');
-                corpoTabela.innerHTML = db.produtos.map(p => `
+    // 7.3 ÁREA ADMINISTRATIVA
+    if (document.getElementById('product-table-body')) {
+        const corpoTabela = document.getElementById('product-table-body');
+        corpoTabela.innerHTML = db.produtos.map(p => `
             <tr>
                 <td><img src="${p.imagens[0]}" width="40" height="40" style="object-fit:cover; border-radius:4px;"></td>
                 <td>${p.nome}</td>
@@ -758,43 +736,41 @@ function render() {
                 </td>
             </tr>
         `).join('');
-            }
+    }
 
-            if (document.getElementById('lista-vendas-admin')) renderizarVendasAdmin();
-            if (document.getElementById('financeiro')) renderizarFinanceiro();
+    if (document.getElementById('lista-vendas-admin')) renderizarVendasAdmin();
+    if (document.getElementById('financeiro')) renderizarFinanceiro();
 
-            // Lista de Equipe
-            const listaEquipe = document.getElementById('lista-equipe');
-            if (listaEquipe) {
-                const membrosAdmin = db.usuarios.filter(u => u.role === 'admin');
-                listaEquipe.innerHTML = membrosAdmin.map(m => `
+    // Lista de Equipe
+    const listaEquipe = document.getElementById('lista-equipe');
+    if (listaEquipe) {
+        const membrosAdmin = db.usuarios.filter(u => u.role === 'admin');
+        listaEquipe.innerHTML = membrosAdmin.map(m => `
             <li style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee;">
                 <span><strong>${m.nome || m.usuario}</strong> (${m.email})</span>
                 ${m.email !== 'admin@loja.com' ? `<button onclick="removerDaEquipe('${m.email}')" style="color:red; border:none; background:none; cursor:pointer;">Remover</button>` : '<i>Dono</i>'}
             </li>
         `).join('');
-            }
+    }
+}
+
+/**
+ * 9. INICIALIZAÇÃO E EVENTOS GLOBAIS
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    // Garante que o banco não quebre se faltar alguma chave nova
+    if (!db.vendas) db.vendas = [];
+    if (!db.carrinho) db.carrinho = [];
+
+    render();
+});
+
+// Fecha o menu de perfil se clicar fora dele
+window.onclick = (event) => {
+    if (!event.target.matches('.avatar-wheel')) {
+        const dropdowns = document.getElementsByClassName("profile-menu-content");
+        for (let d of dropdowns) {
+            if (d.classList.contains('show')) d.classList.remove('show');
         }
-
-        /**
-         * 9. INICIALIZAÇÃO E EVENTOS GLOBAIS
-         */
-        document.addEventListener('DOMContentLoaded', () => {
-            // Garante que o banco não quebre se faltar alguma chave nova
-            if (!db.vendas) db.vendas = [];
-            if (!db.carrinho) db.carrinho = [];
-
-            render();
-        });
-
-        // Fecha o menu de perfil se clicar fora dele
-        window.onclick = (event) => {
-            if (!event.target.matches('.avatar-wheel')) {
-                const dropdowns = document.getElementsByClassName("profile-menu-content");
-                for (let d of dropdowns) {
-                    if (d.classList.contains('show')) d.classList.remove('show');
-                }
-            }
-        };
-    };
+    }
 };
