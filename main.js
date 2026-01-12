@@ -1,34 +1,31 @@
-// main.js
+// main.js - Central de Inteligência e Correções
 
-// 1. Garante que a lista de pedidos existe no banco
+// 1. GARANTIA DE DADOS
 if (!db.pedidos) {
     db.pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
 }
 
+// 2. HISTÓRICO DE PEDIDOS (Lógica de Filtros e Tempo)
 function renderizarPedidos(filtro = 'todos') {
     const container = document.getElementById('lista-pedidos');
-    if (!container) return; // Segurança caso o script rode em outra página
+    if (!container) return;
 
     const agora = new Date().getTime();
-    
     let pedidosFiltrados = db.pedidos;
 
-    // Filtro lógico
     if (filtro !== 'todos') {
         pedidosFiltrados = db.pedidos.filter(p => p.status === filtro);
     }
 
     if (pedidosFiltrados.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color:#999; margin-top:50px;">Nenhum pedido encontrado nesta categoria.</p>`;
+        container.innerHTML = `<p style="text-align:center; color:#999; margin-top:50px;">Nenhum pedido nesta categoria.</p>`;
         return;
     }
 
-    // .reverse() para mostrar os mais recentes primeiro
     container.innerHTML = [...pedidosFiltrados].reverse().map(pedido => {
         let avisoTempo = "";
         let statusParaExibir = pedido.status;
 
-        // Lógica dos 30 minutos para "A Pagar"
         if (pedido.status === 'A Pagar') {
             const expiraEm = pedido.dataTimestamp + (30 * 60 * 1000);
             const minutosRestantes = Math.round((expiraEm - agora) / 60000);
@@ -37,130 +34,142 @@ function renderizarPedidos(filtro = 'todos') {
                 avisoTempo = `<br><small style="color:#e67e22; font-weight:bold;">Expira em ${minutosRestantes} min</small>`;
             } else {
                 statusParaExibir = "Cancelado";
-                avisoTempo = `<br><small style="color:red; font-weight:bold;">Tempo de pagamento esgotado</small>`;
+                avisoTempo = `<br><small style="color:red; font-weight:bold;">Tempo esgotado</small>`;
             }
         }
 
         return `
             <div class="pedido-card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; justify-content:space-between;">
                     <strong>Pedido #${pedido.id}</strong>
                     <span class="status-badge status-${statusParaExibir.toLowerCase().replace(' ', '-')}">${statusParaExibir}</span>
                 </div>
                 <hr style="margin:10px 0; border:0; border-top:1px solid #eee;">
                 <div>
-                    ${pedido.itens.map(item => `<p style="font-size:0.9rem; color:#555;">${item.quantidade}x ${item.nome}</p>`).join('')}
+                    ${pedido.itens.map(item => `<p style="font-size:0.9rem;">${item.quantidade}x ${item.nome}</p>`).join('')}
                 </div>
                 <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:flex-end;">
                     <div>
-                        <p style="font-size:1.1rem; font-weight:bold; color:#333;">Total: R$ ${parseFloat(pedido.total).toFixed(2).replace('.', ',')}</p>
+                        <p style="font-size:1.1rem; font-weight:bold;">Total: R$ ${parseFloat(pedido.total).toFixed(2).replace('.', ',')}</p>
                         ${avisoTempo}
                     </div>
-                    ${statusParaExibir === 'Entregue' ? 
-                        `<button class="tab-btn active" onclick="irParaAvaliar(${pedido.itens[0].id})" style="border-radius:4px; padding:5px 15px; font-size:0.8rem;">Avaliar</button>` 
-                        : ''}
+                    ${statusParaExibir === 'Entregue' ? `<button class="tab-btn active" onclick="irParaAvaliar(${pedido.itens[0].id})">Avaliar</button>` : ''}
                 </div>
             </div>
         `;
     }).join('');
 }
 
-// Funções globais para os botões do HTML
+// 3. SELEÇÃO NO CARRINHO (Soma apenas o que está marcado)
+function renderizarCarrinhoComSelecao() {
+    const lista = document.getElementById('lista-carrinho');
+    if (!lista) return;
+
+    if (db.carrinho.length === 0) {
+        lista.innerHTML = '<div class="empty-cart">Carrinho vazio. <a href="index.html">Comprar!</a></div>';
+        return;
+    }
+
+    lista.innerHTML = db.carrinho.map((item, index) => `
+        <div class="cart-item" style="display:flex; gap:15px; background:white; padding:15px; margin-bottom:10px; border-radius:8px;">
+            <input type="checkbox" class="cart-check" data-index="${index}" checked onchange="calcularTotalSelecionado()">
+            <img src="${item.imagem}" style="width:60px; height:60px; object-fit:cover;">
+            <div style="flex:1;">
+                <h4>${item.nome}</h4>
+                <strong>R$ ${parseFloat(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</strong>
+            </div>
+            <button onclick="removerItemCarrinho(${index})" style="color:red; background:none; border:none; cursor:pointer;">X</button>
+        </div>
+    `).join('');
+    calcularTotalSelecionado();
+}
+
+window.calcularTotalSelecionado = () => {
+    let total = 0;
+    document.querySelectorAll('.cart-check').forEach(check => {
+        if (check.checked) {
+            const item = db.carrinho[check.dataset.index];
+            total += item.preco * item.quantidade;
+        }
+    });
+    const formatado = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    if(document.getElementById('subtotal')) document.getElementById('subtotal').innerText = formatado;
+    if(document.getElementById('total-geral')) document.getElementById('total-geral').innerText = formatado;
+};
+
+// 4. CORREÇÕES DE FLUXO (Onde resolvemos os problemas graves)
+
+// CORREÇÃO: Limpa o carrinho ao finalizar compra
+window.gerarNovoPedido = (itens, total) => {
+    const novoPedido = {
+        id: Math.floor(1000 + Math.random() * 9000),
+        dataTimestamp: new Date().getTime(),
+        itens: [...itens],
+        total: total,
+        status: 'A Pagar'
+    };
+    db.pedidos.push(novoPedido);
+    
+    // Remove do carrinho apenas o que foi comprado
+    const idsComprados = itens.map(i => i.id);
+    db.carrinho = db.carrinho.filter(item => !idsComprados.includes(item.id));
+    
+    save(); // Salva no banco principal
+    localStorage.setItem('pedidos', JSON.stringify(db.pedidos));
+    window.location.href = 'pedidos.html';
+};
+
+// CORREÇÃO: Impede ir para o pagamento se não tiver estoque
+window.comprarAgora = () => {
+    const idAtual = localStorage.getItem('produtoAtualID');
+    const produto = db.produtos.find(p => p.id == idAtual);
+
+    if (!produto || produto.estoque <= 0) {
+        alert("Acabou o estoque!");
+        return; // Mata a função aqui
+    }
+    adicionarAoCarrinhoLocal();
+    window.location.href = "checkout.html";
+};
+
+// CORREÇÃO: Forçar o funcionamento do botão "Meus Pedidos" no Index
+document.addEventListener('DOMContentLoaded', () => {
+    // Injeta a função de clique no ícone ou texto de pedidos do index
+    const userNav = document.querySelector('.user-nav');
+    if (userNav) {
+        const btnPedidos = Array.from(userNav.querySelectorAll('span')).find(s => s.innerText.includes('Meus') || s.innerText.includes('🛒'));
+        if (btnPedidos) {
+            const link = document.createElement('span');
+            link.innerText = "Meus Pedidos";
+            link.style.cursor = "pointer";
+            link.onclick = () => window.location.href = 'pedidos.html';
+            userNav.insertBefore(link, btnPedidos);
+        }
+    }
+    
+    if (document.getElementById('lista-pedidos')) renderizarPedidos();
+    if (document.getElementById('lista-carrinho')) renderizarCarrinhoComSelecao();
+});
+
+// Funções de apoio
 window.filtrarPedidos = (status, btn) => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderizarPedidos(status);
 };
 
-window.irParaAvaliar = (produtoId) => {
-    localStorage.setItem('produtoAtualID', produtoId);
-    window.location.href = 'produto.html';
-};
-
-// Inicializa a tela quando o DOM estiver pronto
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('lista-pedidos')) {
-        renderizarPedidos();
-    }
-});
-
-// main.js - Lógica de Seleção no Carrinho
-
-function renderizarCarrinhoComSelecao() {
-    const lista = document.getElementById('lista-carrinho');
-    const subtotalTxt = document.getElementById('subtotal');
-    const totalTxt = document.getElementById('total-geral');
-    
-    if (!lista) return;
-
-    if (db.carrinho.length === 0) {
-        lista.innerHTML = '<div class="empty-cart">Seu carrinho está vazio. <a href="index.html">Vá às compras!</a></div>';
-        subtotalTxt.innerText = "R$ 0,00";
-        totalTxt.innerText = "R$ 0,00";
-        return;
-    }
-
-    // Renderiza os itens com um Checkbox
-    lista.innerHTML = db.carrinho.map((item, index) => `
-        <div class="cart-item" style="display: flex; align-items: center; gap: 15px; background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px;">
-            <input type="checkbox" class="cart-check" data-index="${index}" checked onchange="calcularTotalSelecionado()" style="width: 20px; height: 20px; cursor: pointer;">
-            
-            <img src="${item.imagem}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;">
-            
-            <div style="flex: 1;">
-                <h4 style="margin: 0; font-size: 1rem;">${item.nome}</h4>
-                <p style="color: #666; font-size: 0.9rem;">Qtd: ${item.quantidade}</p>
-                <strong style="color: #333;">R$ ${parseFloat(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</strong>
-            </div>
-            
-            <button onclick="removerItemCarrinho(${index})" style="background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 0.8rem;">Remover</button>
-        </div>
-    `).join('');
-
-    calcularTotalSelecionado();
-}
-
-window.calcularTotalSelecionado = () => {
-    const checkboxes = document.querySelectorAll('.cart-check');
-    let total = 0;
-
-    checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            const index = checkbox.getAttribute('data-index');
-            const item = db.carrinho[index];
-            total += item.preco * item.quantidade;
-        }
-    });
-
-    const totalFormatado = `R$ ${total.toFixed(2).replace('.', ',')}`;
-    document.getElementById('subtotal').innerText = totalFormatado;
-    document.getElementById('total-geral').innerText = totalFormatado;
-};
-
 window.removerItemCarrinho = (index) => {
     db.carrinho.splice(index, 1);
-    save(); // Função save() que já existe no seu script.js
+    save();
     renderizarCarrinhoComSelecao();
 };
 
-// Modificando a função de prosseguir para o checkout
 window.prosseguirParaCheckout = () => {
     const selecionados = [];
-    const checkboxes = document.querySelectorAll('.cart-check');
-
-    checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            const index = checkbox.getAttribute('data-index');
-            selecionados.push(db.carrinho[index]);
-        }
+    document.querySelectorAll('.cart-check').forEach(check => {
+        if (check.checked) selecionados.push(db.carrinho[check.dataset.index]);
     });
-
-    if (selecionados.length === 0) {
-        alert("Selecione ao menos um item para comprar!");
-        return;
-    }
-
-    // Salva apenas os itens selecionados para o checkout usar
+    if (selecionados.length === 0) return alert("Selecione um item!");
     localStorage.setItem('itensParaComprar', JSON.stringify(selecionados));
     window.location.href = 'checkout.html';
 };
