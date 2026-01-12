@@ -236,10 +236,14 @@ window.validarEFinalizarCadastro = () => {
     };
 
     // ... final da função validarEFinalizarCadastro ...
+    // ... dentro de validarEFinalizarCadastro ...
     db.usuarios.push(novoUsuario);
-    // Mudamos para localStorage para o cadastro já logar permanentemente
     localStorage.setItem('usuarioLogado', JSON.stringify(novoUsuario));
     save();
+    
+    // ADICIONE ESTA LINHA ABAIXO para fechar o modal antes de recarregar
+    fecharCadastro(); 
+    
     location.reload();
 };
 
