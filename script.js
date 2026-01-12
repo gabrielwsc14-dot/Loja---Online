@@ -668,26 +668,29 @@ window.verProduto = (id) => {
  */
 function render() {
     // 7.1 HEADER DINÂMICO (Dentro da função render no seu script.js)
-    const containerNav = document.querySelector('.user-nav');
-    if (containerNav) {
-        if (usuarioLogado) {
-            containerNav.innerHTML = `
-            <div class="user-profile-wrapper" style="position: relative; display: flex; align-items: center; gap: 15px;">
-                <span onclick="window.location.href='pedidos.html'" style="cursor:pointer; font-size: 0.9rem;">📦 Meus Pedidos</span>
-                
-                <div class="avatar-wheel" onclick="document.getElementById('profile-dropdown').classList.toggle('show')" style="width:40px; height:40px; background:#3483fa; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold;">
-                    ${usuarioLogado.usuario.charAt(0).toUpperCase()}
-                </div>
-                <div id="profile-dropdown" class="profile-menu-content">
-                    <div class="menu-header">Olá, ${usuarioLogado.usuario}</div>
-                    <a href="pedidos.html">📦 Meus Pedidos</a>
-                    ${usuarioLogado.role === 'admin' ? '<a href="admin.html" style="color: #27ae60; font-weight: bold;">⚙️ Painel Admin</a>' : ''}
-                    <hr>
-                    <a href="#" onclick="logout()" style="color: red;">Sair</a>
-                </div>
+    // 7.1 HEADER DINÂMICO
+const containerNav = document.querySelector('.user-nav');
+if (containerNav) {
+    if (usuarioLogado) {
+        containerNav.innerHTML = `
+        <div class="user-profile-wrapper" style="position: relative; display: flex; align-items: center; gap: 15px;">
+            
+            <div class="avatar-wheel" onclick="document.getElementById('profile-dropdown').classList.toggle('show')" style="width:40px; height:40px; background:#3483fa; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold;">
+                ${usuarioLogado.usuario.charAt(0).toUpperCase()}
             </div>
-            <span class="cart-icon" style="cursor:pointer" onclick="window.location.href='carrinho.html'">🛒</span>
-        `;
+
+            <div id="profile-dropdown" class="profile-menu-content">
+                <div class="menu-header">Olá, ${usuarioLogado.usuario}</div>
+                
+                <a href="pedidos.html">📦 Meus Pedidos</a>
+                
+                ${usuarioLogado.role === 'admin' ? '<a href="admin.html" style="color: #27ae60; font-weight: bold;">⚙️ Painel Admin</a>' : ''}
+                <hr>
+                <a href="#" onclick="logout()" style="color: red;">Sair</a>
+            </div>
+        </div>
+        <span class="cart-icon" style="cursor:pointer" onclick="window.location.href='carrinho.html'">🛒</span>
+    `;
             // ... resto do código da injeção de estilo ...
             // Injeção de CSS para o Dropdown
             if (!document.getElementById('perfil-style')) {
