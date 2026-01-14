@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Conta - JH Baby</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #f5f5f5;
+            font-family: sans-serif;
+            margin: 0;
+        }
+
+        .account-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Dinâmico */
+        .acc-header {
+            background: #ee4d2d;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: white;
+        }
+
+        .avatar-lg {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: #ee4d2d;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        /* Controle de Telas */
+        .view-section {
+            display: none;
+            padding: 10px;
+            animation: fadeIn 0.3s;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            padding: 15px 10px 5px;
+            color: #888;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* Estilo Menu Principal */
+        .menu-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .menu-nav-item i {
+            width: 35px;
+            font-size: 20px;
+            color: #ee4d2d;
+            font-style: normal;
+        }
+
+        .menu-nav-text {
+            flex: 1;
+        }
+
+        .menu-nav-text strong {
+            display: block;
+            font-size: 16px;
+        }
+
+        .menu-nav-text span {
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* Formulários e Inputs */
+        .form-group {
+            padding: 10px;
+            border-bottom: 1px solid #f9f9f9;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .btn-action {
+            background: #ee4d2d;
+            color: white;
+            border: none;
+            width: calc(100% - 20px);
+            padding: 15px;
+            margin: 20px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            background: none;
+            border: 1px solid #ee4d2d;
+            color: #ee4d2d;
+        }
+
+        /* Cards de Endereço/Cartão */
+        .data-card {
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px;
+            position: relative;
+            background: #fafafa;
+        }
+
+        .tag-default {
+            background: #ee4d2d;
+            color: white;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="account-wrapper">
+        <header class="acc-header">
+            <button class="back-btn" id="btn-voltar" onclick="voltarOuSair()">←</button>
+            <div class="avatar-lg" id="acc-avatar">U</div>
+            <h2 id="acc-nome-topo" style="margin:0">Carregando...</h2>
+            <p id="acc-sub-topo" style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Minha Conta</p>
+        </header>
+
+        <div id="view-main" class="view-section active">
+            <div class="section-title">Configurações</div>
+            <div class="menu-nav-item" onclick="showView('view-perfil', 'Editar Perfil')">
+                <i>👤</i>
+                <div class="menu-nav-text"><strong>Meu Perfil</strong><span>Nome, usuário e e-mail</span></div>
+                <span>›</span>
+            </div>
+            <div class="menu-nav-item" onclick="showView('view-enderecos', 'Meus Endereços')">
+                <i>📍</i>
+                <div class="menu-nav-text"><strong>Meus Endereços</strong><span>Local de entrega atual</span></div>
+                <span>›</span>
+            </div>
+            <div class="menu-nav-item" onclick="showView('view-cartoes', 'Meus Cartões')">
+                <i>💳</i>
+                <div class="menu-nav-text"><strong>Meus Cartões</strong><span>Gerenciar cartões salvos</span></div>
+                <span>›</span>
+            </div>
+            <button class="btn-action btn-outline" onclick="logout()">SAIR DA CONTA</button>
+        </div>
+
+        <div id="view-perfil" class="view-section">
+            <div class="form-group">
+                <label>NOME COMPLETO</label>
+                <input type="text" id="in-nome" class="edit-input">
+            </div>
+            <div class="form-group">
+                <label>NOME DE USUÁRIO</label>
+                <input type="text" id="in-user" class="edit-input">
+            </div>
+            <div class="form-group">
+                <label>E-MAIL</label>
+                <input type="email" id="in-email" class="edit-input">
+            </div>
+            <button class="btn-action" onclick="salvarPerfil()">SALVAR ALTERAÇÕES</button>
+        </div>
+
+        <div id="view-enderecos" class="view-section">
+            <div id="lista-enderecos"></div>
+            <div class="section-title">Editar Endereço</div>
+            <div class="form-group"><input type="text" id="end-rua" placeholder="Rua" class="edit-input"></div>
+            <div style="display:flex">
+                <div class="form-group" style="flex:1"><input type="text" id="end-num" placeholder="Nº"
+                        class="edit-input"></div>
+                <div class="form-group" style="flex:2"><input type="text" id="end-cep" placeholder="CEP"
+                        class="edit-input"></div>
+            </div>
+            <div class="form-group"><input type="text" id="end-cidade" placeholder="Cidade" class="edit-input"></div>
+            <button class="btn-action" onclick="salvarEndereco()">ATUALIZAR ENDEREÇO</button>
+        </div>
+
+        <div id="view-cartoes" class="view-section">
+            <div id="lista-cartoes"></div>
+
+            <div class="section-title">Adicionar Novo Cartão</div>
+            <div class="form-group"><input type="text" id="card-num" placeholder="Número do Cartão" class="edit-input">
+            </div>
+            <div class="form-group"><input type="text" id="card-nome" placeholder="Nome impresso no cartão"
+                    class="edit-input"></div>
+            <div style="display:flex">
+                <div class="form-group" style="flex:1"><input type="text" id="card-val" placeholder="Validade (MM/AA)"
+                        class="edit-input"></div>
+                <div class="form-group" style="flex:1"><input type="text" id="card-cvv" placeholder="CVV"
+                        class="edit-input"></div>
+            </div>
+            <button class="btn-action" onclick="adicionarCartao()">SALVAR CARTÃO</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let viewAtual = 'view-main';
+
+        function showView(viewId, titulo) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            document.getElementById('acc-sub-topo').innerText = titulo;
+            viewAtual = viewId;
+        }
+
+        function voltarOuSair() {
+            if (viewAtual === 'view-main') {
+                window.location.href = 'index.html';
+            } else {
+                showView('view-main', 'Minha Conta');
+            }
+        }
+
+        // --- LÓGICA DE SALVAMENTO ---
+
+        function salvarPerfil() {
+            const index = db.usuarios.findIndex(u => u.id === usuarioLogado.id);
+            const novoUser = document.getElementById('in-user').value;
+
+            // Valida se o username já existe em outro ID
+            if (db.usuarios.some(u => u.usuario === novoUser && u.id !== usuarioLogado.id)) {
+                return alert("Este nome de usuário já existe!");
+            }
+
+            db.usuarios[index].nome = document.getElementById('in-nome').value;
+            db.usuarios[index].usuario = novoUser;
+            db.usuarios[index].email = document.getElementById('in-email').value;
+
+            usuarioLogado = db.usuarios[index];
+            persistirERecarregar();
+        }
+
+        function salvarEndereco() {
+            const index = db.usuarios.findIndex(u => u.id === usuarioLogado.id);
+            db.usuarios[index].dadosCompra = {
+                rua: document.getElementById('end-rua').value,
+                numero: document.getElementById('end-num').value,
+                cep: document.getElementById('end-cep').value,
+                cidade: document.getElementById('end-cidade').value,
+                bairro: "Centro", // Exemplo simplificado
+                estado: "MG"
+            };
+            usuarioLogado = db.usuarios[index];
+            persistirERecarregar();
+        }
+
+        function persistirERecarregar() {
+            localStorage.setItem('lojaDB', JSON.stringify(db));
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+            alert("Dados salvos com sucesso!");
+            location.reload();
+        }
+
+        function logout() {
+            localStorage.removeItem('usuarioLogado');
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!usuarioLogado) return window.location.href = 'index.html';
+
+            // Preenche UI
+            document.getElementById('acc-avatar').innerText = usuarioLogado.usuario[0].toUpperCase();
+            document.getElementById('acc-nome-topo').innerText = usuarioLogado.nome || usuarioLogado.usuario;
+
+            // Preenche Inputs Perfil
+            document.getElementById('in-nome').value = usuarioLogado.nome || "";
+            document.getElementById('in-user').value = usuarioLogado.usuario;
+            document.getElementById('in-email').value = usuarioLogado.email;
+
+            // Preenche Endereço se existir
+            if (usuarioLogado.dadosCompra) {
+                const d = usuarioLogado.dadosCompra;
+                document.getElementById('lista-enderecos').innerHTML = `
+                    <div class="data-card">
+                        <strong>Endereço Padrão</strong> <span class="tag-default">ATIVO</span><br>
+                        ${d.rua}, ${d.numero} - ${d.cidade}
+                    </div>`;
+                document.getElementById('end-rua').value = d.rua;
+                document.getElementById('end-num').value = d.numero;
+                document.getElementById('end-cep').value = d.cep;
+                document.getElementById('end-cidade').value = d.cidade;
+            } else {
+                document.getElementById('lista-enderecos').innerHTML = '<p style="padding:10px; color:#999">Nenhum endereço salvo.</p>';
+            }
+        });
+    </script>
+</body>
+
+</html>

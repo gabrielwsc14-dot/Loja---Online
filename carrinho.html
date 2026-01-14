@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrinho de Compras - Bebê Loja</title>
+    <title>Carrinho de Compras - JH Baby Enxoval</title>
     <link rel="stylesheet" href="carrinho.css">
 </head>
 <body>
 
     <header class="cart-header">
         <div class="container">
-            <h1 onclick="window.location.href='index.html'" style="cursor:pointer">Bebê Loja</h1>
+            <h1 onclick="window.location.href='index.html'" style="cursor:pointer">JH Baby Enxoval</h1>
             <span>Carrinho de Compras</span>
         </div>
     </header>
@@ -43,10 +43,16 @@
     <script src="script.js"></script>
     <script src="main.js"></script>
     <script>
-        // Agora o main.js cuidará de chamar a renderização correta
         document.addEventListener('DOMContentLoaded', () => {
-            if (typeof renderizarCarrinhoComSelecao === 'function') {
-                renderizarCarrinhoComSelecao();
+            // 1. Garante que o DB foi lido do localStorage
+            const dados = localStorage.getItem('lojaDB');
+            if (dados) db = JSON.parse(dados);
+
+            // 2. Chama o nome CORRETO da função que está no seu script.js
+            if (typeof renderizarCarrinho === 'function') {
+                renderizarCarrinho();
+            } else {
+                console.error("Erro: A função renderizarCarrinho não foi encontrada no script.js");
             }
         });
     </script>

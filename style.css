@@ -5,20 +5,51 @@
     box-sizing: border-box;
 }
 
+/* 1. COR DE FUNDO GLOBAL (Rosa Bebê) */
+/* 1. FUNDO DAS PÁGINAS (Apenas no background) */
 body {
-    background-color: #ebebeb;
-    /* Cinza clarinho padrão Mercado Livre/Shopee */
+    background-color: #FDF2F5 !important; /* Rosa Bebê */
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
 }
 
-/* Header Estilo Marketplace */
+/* 2. BARRA SUPERIOR (Onde estava o amarelo) */
+/* 2. BARRA SUPERIOR COM TRANSIÇÃO DE COR */
 .main-header {
-    background-color: #fff159;
-    /* Amarelo clássico (ou mude para a cor da sua loja) */
+    /* O gradiente faz a "mágica" de fundir a foto com o fundo */
+    /* Ajuste o primeiro #FFFFFF para a cor de fundo da sua imagem se não for branca */
+    background: linear-gradient(to right, #ffffff 0%, #FDF2F5 100%);
+    
     padding: 10px 0;
     position: sticky;
     top: 0;
     z-index: 1000;
+    border-bottom: 3px solid #f8d7da;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* 3. A IMAGEM ENCAIXADA (Sem mexer em tamanhos) */
+.logo-placeholder img {
+    height: 135px; 
+    width: auto;
+    object-fit: contain;
+    /* Remove qualquer borda dura que a foto possa ter */
+    mask-image: linear-gradient(to right, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+}
+
+/* 3. AJUSTE PARA A SUA FOTO VERTICAL */
+.logo-placeholder {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 5px;
+}
+
+
+/* Garante que os blocos de conteúdo continuem brancos sobre o fundo rosa */
+.content-wrapper, .product-card, .modal-content, .container-produto {
+    background-color: #ffffff;
 }
 
 .nav-container {
@@ -28,13 +59,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-.logo-placeholder {
-    font-weight: bold;
-    font-size: 24px;
-    color: #333;
-    min-width: 100px;
 }
 
 .search-box {

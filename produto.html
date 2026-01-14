@@ -106,8 +106,11 @@
 
     <header class="main-header">
         <div class="nav-container">
-            <div class="logo-placeholder" onclick="window.location.href='index.html'" style="cursor:pointer">LOGO</div>
-            <nav class="user-nav"></nav>
+            <div class="logo-placeholder" onclick="window.location.href='index.html'" style="cursor:pointer">
+                <img src="img/JH-img.png" alt="JH BABY ENXOVAL">
+            </div>
+            <nav class="user-nav">
+            </nav>
         </div>
     </header>
 
@@ -200,11 +203,16 @@
             const idAtual = localStorage.getItem('produtoAtualID');
             const produto = db.produtos.find(p => p.id == idAtual);
 
-            if (produto.estoque <= 0) {
+            if (!produto || produto.estoque <= 0) {
                 alert("Desculpe, este produto está sem estoque.");
                 return;
             }
 
+            // 1. Força a leitura mais atualizada do banco para não perder o que já estava lá
+            const bancoAtualizado = JSON.parse(localStorage.getItem('lojaDB'));
+            if (bancoAtualizado) db = bancoAtualizado;
+
+            // 2. Verifica se o item já existe no carrinho
             const itemExistente = db.carrinho.find(item => item.id == produto.id);
 
             if (itemExistente) {
@@ -219,14 +227,34 @@
                 });
             }
 
-            save();
+            // 3. SALVAMENTO CRÍTICO: Usa a função save() se ela existir, 
+            // ou força o setItem para garantir a persistência
+            if (typeof save === 'function') {
+                save();
+            } else {
+                localStorage.setItem('lojaDB', JSON.stringify(db));
+            }
+
             alert("Produto adicionado ao carrinho!");
             window.location.href = "carrinho.html";
         };
 
-        // ESTA FUNÇÃO PRECISA ESTAR FORA DA OUTRA
         window.comprarAgora = () => {
-            adicionarAoCarrinhoLocal();
+            // BUG 2: Resolve o problema de acumular produtos antigos/apagados
+            db.carrinho = []; // Esvazia o carrinho antes de uma compra direta
+
+            const idAtual = localStorage.getItem('produtoAtualID');
+            const produto = db.produtos.find(p => p.id == idAtual);
+
+            db.carrinho.push({
+                id: produto.id,
+                nome: produto.nome,
+                preco: parseFloat(produto.preco),
+                imagem: produto.imagens[0],
+                quantidade: 1
+            });
+
+            save();
             window.location.href = "checkout.html";
         };
     </script>

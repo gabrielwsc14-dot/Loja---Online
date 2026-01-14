@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ofertas Relâmpago - JH Baby Enxoval</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="ofertas.css">
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="nav-container">
+            <div class="logo-placeholder" onclick="window.location.href='index.html'" style="cursor:pointer">
+                <img src="img/JH-img.png" alt="JH BABY ENXOVAL">
+            </div>
+            <div class="search-box">
+                <input type="text" id="busca-ofertas" placeholder="Buscar nas ofertas...">
+            </div>
+            <nav class="user-nav">
+                <span onclick="window.location.href='index.html'" style="cursor:pointer">Voltar ao Início</span>
+                <span class="cart-icon" onclick="window.location.href='carrinho.html'" style="cursor:pointer">🛒</span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <section class="product-section">
+            <div class="ofertas-banner-topo">
+                <h2>🔥 Central de Ofertas Relâmpago</h2>
+                <p>Produtos com desconto por tempo limitado!</p>
+            </div>
+
+            <div class="product-grid" id="grid-apenas-ofertas">
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="ofertas.js"></script>
+    <script>
+
+        function carregarPaginaOfertas() {
+            const gridOfertas = document.getElementById('grid-apenas-ofertas');
+            if (!gridOfertas) return;
+
+            const ofertasValidas = db.produtos.filter(p => p.isOferta);
+
+            if (ofertasValidas.length === 0) {
+                gridOfertas.innerHTML = "<p>Nenhuma oferta ativa no momento.</p>";
+                return;
+            }
+
+            gridOfertas.innerHTML = ofertasValidas.map(p => `
+        <div class="product-card">
+            <div class="badge-desconto">PROMOÇÃO</div>
+            <img src="${p.imagens[0]}" alt="${p.nome}">
+            <h4>${p.nome}</h4>
+            <p class="preco-antigo">De: R$ ${p.precoAntigo}</p>
+            <p class="preco-atual">Por: R$ ${p.preco}</p>
+            <button onclick="localStorage.setItem('produtoAtualID', '${p.id}'); window.location.href='produto.html'">Ver Detalhes</button>
+        </div>
+    `).join('');
+        }
+
+        // Adicione ao seu DOMContentLoaded:
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarPaginaOfertas();
+        });
+    </script>
+</body>
+
+</html>

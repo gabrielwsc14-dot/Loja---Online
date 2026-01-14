@@ -4,15 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketplace Bebê - Jequitinhonha</title>
+    <title>JH Baby Enxoval - Jequitinhonha</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="ofertas.css">
 </head>
 
 <body>
 
     <header class="main-header">
         <div class="nav-container">
-            <div class="logo-placeholder">LOGO</div>
+            <div class="logo-placeholder" onclick="window.location.href='index.html'">
+                <img src="img/JH-img.png" alt="JH BABY ENXOVAL">
+            </div>
 
             <div class="search-box">
                 <input type="text" placeholder="Buscar produtos, marcas e muito mais...">
@@ -64,17 +67,27 @@
     </div>
 
     <main class="content-wrapper">
+
+        <div id="ofertas-scroller-container">
+            <div class="scroller-header">
+                <span>🔥 OFERTAS RELÂMPAGO</span>
+                <a href="ofertas.html" style="color: white; text-decoration: none; font-weight: bold;">Ver tudo ></a>
+            </div>
+            <div class="ofertas-grid" id="ofertas-grid">
+            </div>
+        </div>
+
         <section class="product-section">
             <h3 class="section-title">Inspirado no último que você viu</h3>
-
             <div class="product-grid" id="vitrine-index">
-                <p style="padding: 20px; color: #999;">Nenhum produto cadastrado ainda.</p>
             </div>
         </section>
     </main>
 
+    <script src="ofertas.js"></script>
+
     <script src="script.js"></script>
-     <script src="main.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>

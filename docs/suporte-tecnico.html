@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperação do Sistema - ADMIN ONLY</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: #eee; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .emergency-card { background: #2d2d2d; border: 2px solid #e74c3c; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .tool-card { background: #333; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 5px solid #3483fa; }
+        button { cursor: pointer; padding: 10px 15px; border: none; border-radius: 5px; font-weight: bold; margin-top: 10px; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-fix { background: #3483fa; color: white; }
+        pre { background: #000; padding: 10px; border-radius: 5px; overflow-x: auto; color: #0f0; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 Painel de Recuperação Técnica</h1>
+        <p>Use estas ferramentas se o site principal estiver travado ou com comportamento estranho.</p>
+
+        <div class="emergency-card">
+            <h2>🛠️ Ferramentas de Conserto (LocalStorage)</h2>
+            <p>Se o site não carrega, tente estas opções na ordem:</p>
+            
+            <button class="btn-fix" onclick="corrigirEstrutura()">1. Corrigir Estrutura do Banco</button>
+            <small style="display:block">Tenta consertar chaves faltando sem apagar seus produtos.</small>
+
+            <button class="btn-fix" onclick="limparCarrinho()">2. Esvaziar Carrinhos Travados</button>
+            <small style="display:block">Resolve erros se o cliente não conseguir finalizar compras.</small>
+
+            <button class="btn-danger" onclick="resetTotal()">3. RESET TOTAL (CUIDADO)</button>
+            <small style="display:block">Apaga TUDO (Produtos, Vendas, Usuários) e volta ao estado de fábrica.</small>
+        </div>
+
+        <div class="tool-card">
+            <h2>🔍 Visualizador de Dados Brutos</h2>
+            <p>Abaixo estão os dados reais salvos no seu navegador agora:</p>
+            <pre id="debug-view">Carregando dados...</pre>
+        </div>
+    </div>
+
+    <script>
+        const dbKey = 'lojaDB';
+
+        function atualizarView() {
+            const data = localStorage.getItem(dbKey);
+            document.getElementById('debug-view').innerText = data ? JSON.stringify(JSON.parse(data), null, 4) : "Banco vazio.";
+        }
+
+        function corrigirEstrutura() {
+            let db = JSON.parse(localStorage.getItem(dbKey)) || {};
+            if (!db.vendas) db.vendas = [];
+            if (!db.carrinho) db.carrinho = [];
+            if (!db.produtos) db.produtos = [];
+            localStorage.setItem(dbKey, JSON.stringify(db));
+            alert("Estrutura corrigida! Tente abrir o site novamente.");
+            atualizarView();
+        }
+
+        function limparCarrinho() {
+            let db = JSON.parse(localStorage.getItem(dbKey));
+            if (db) {
+                db.carrinho = [];
+                localStorage.setItem(dbKey, JSON.stringify(db));
+                alert("Carrinhos limpos!");
+                atualizarView();
+            }
+        }
+
+        function resetTotal() {
+            if (confirm("ATENÇÃO: Isso apagará TODOS os seus produtos e vendas permanentemente. Confirma?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        atualizarView();
+    </script>
+
+    <script>
+        window.chatbaseConfig = {
+            chatbotId: "SEU_ID_AQUI", // Você cria no site chatbase.co
+        }
+    </script>
+    <script src="https://www.chatbase.co/embed.min.js" id="yQPATBknqJfLqnGZ20yvk" defer></script>
+</body>
+</html>

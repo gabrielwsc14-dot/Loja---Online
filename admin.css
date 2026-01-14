@@ -103,3 +103,101 @@ table th, table td {
     .sidebar { width: 100%; height: auto; }
     .main-content { padding: 15px; }
 }
+
+/* Estilo Profissional para Minha Conta */
+.account-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.profile-card { grid-column: span 2; }
+
+.profile-layout {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.avatar-preview {
+    width: 80px;
+    height: 80px;
+    background: #3483fa;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.profile-inputs { flex: 1; }
+
+.profile-inputs input, .security-card input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 15px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+}
+
+.btn-primary {
+    background: #3483fa;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-primary:hover { background: #2561c2; }
+
+.toggle-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Modo Escuro */
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+body.dark-mode .card {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border: 1px solid #444;
+}
+body.dark-mode input {
+    background-color: #3d3d3d;
+    color: white;
+    border-color: #555;
+}
+
+/* Container da tabela para scroll horizontal no mobile */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+    /* Esconde a coluna do ID no mobile para ganhar espaço, 
+       já que você pode ver o ID no computador quando precisar configurar ofertas */
+    table th:nth-child(6), 
+    table td:nth-child(6) {
+        display: none;
+    }
+    
+    /* Faz os campos de oferta ficarem em uma coluna só */
+    #form-oferta div {
+        grid-template-columns: 1fr !important;
+    }
+}

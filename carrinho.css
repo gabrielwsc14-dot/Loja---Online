@@ -31,3 +31,16 @@ body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-c
 @media (max-width: 768px) {
     .cart-container { grid-template-columns: 1fr; }
 }
+
+body {
+    background-color: #FDF2F5 !important;
+}
+
+.cart-header {
+    background: white !important;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-items, .cart-summary {
+    background: white !important;
+}

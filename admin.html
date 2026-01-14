@@ -24,6 +24,12 @@
             <a href="docs/index.html" target="_blank" style="margin-top: 50px; color: #e74c3c;">❓ Manual de
                 Ajuda</a>
         </nav>
+
+        <nav>
+            <a href="docs/suporte-tecnico.html"
+                style="margin-top: 10px; color: #3483fa; display: block; font-weight: bold;">🛠️ Suporte Técnico
+                (IA)</a>
+        </nav>
     </aside>
 
     <main class="main-content">
@@ -41,20 +47,52 @@
 
             <div class="card">
                 <h3>Produtos Cadastrados</h3>
-                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-                    <thead>
-                        <tr style="text-align: left; border-bottom: 2px solid #eee;">
-                            <th>Foto</th>
-                            <th>Produto</th>
-                            <th>Estoque</th>
-                            <th>Preço</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="product-table-body">
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Foto</th>
+                                <th>Produto</th>
+                                <th>Estoque</th>
+                                <th>Preço</th>
+                                <th>Ações</th>
+                                <th>ID</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-table-body"></tbody>
+                    </table>
+                </div>
             </div>
+
+            <button onclick="toggleOfertasGlobal()" class="btn-beta">Ofertas (BETA)</button>
+
+            <div class="card" style="border: 2px dashed #3483fa; margin-bottom: 20px;">
+                <h3>🔥 Configuração de Ofertas (BETA)</h3>
+
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                    <span>Ativar Ofertas no Site:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-ofertas" onclick="toggleOfertasGlobal()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <hr>
+
+                <div id="form-oferta" style="margin-top: 15px;">
+                    <h4>Transformar Produto em Oferta</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px;">
+                        <input type="number" id="id-transf" placeholder="ID do Produto">
+                        <input type="number" id="preco-novo" placeholder="Novo Preço (R$)">
+                        <input type="date" id="data-fim">
+                    </div>
+                    <button onclick="executarTransformacao()"
+                        style="margin-top: 10px; width: 100%; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        Confirmar e Publicar Oferta
+                    </button>
+                </div>
+            </div>
+
         </section>
 
         <section id="vendas" class="admin-section" style="display:none;">
@@ -111,19 +149,47 @@
         </section>
 
         <section id="config" class="admin-section" style="display:none;">
-            <h1>Minha Conta</h1>
-            <div class="card" style="max-width: 500px;">
-                <h3>Segurança e Acesso</h3>
-                <div style="margin-top: 20px;">
-                    <label style="display: block; margin-bottom: 5px;">Alterar Nome de Usuário</label>
-                    <input type="text" id="new-username" style="width: 100%; padding: 8px; margin-bottom: 15px;">
+            <div class="account-header">
+                <h1>Configurações da Conta</h1>
+                <p>Gerencie suas informações pessoais e segurança</p>
+            </div>
 
-                    <label style="display: block; margin-bottom: 5px;">Nova Senha</label>
-                    <input type="password" id="new-password" style="width: 100%; padding: 8px; margin-bottom: 15px;">
+            <div class="account-grid">
+                <div class="card profile-card">
+                    <h3>Informações Pessoais</h3>
+                    <div class="profile-layout">
+                        <div class="avatar-upload">
+                            <div class="avatar-preview" id="avatarPreview">AD</div>
+                            <button onclick="alterarFoto()" class="btn-sm">Alterar Foto</button>
+                        </div>
+                        <div class="profile-inputs">
+                            <label>Nome Completo</label>
+                            <input type="text" id="new-username" placeholder="Seu nome">
+                            <label>E-mail Associado</label>
+                            <input type="email" id="admin-email-input" placeholder="admin@bebeloja.com" readonly>
+                        </div>
+                    </div>
+                </div>
 
-                    <button onclick="atualizarAdmin()"
-                        style="background: #3483fa; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Salvar
-                        Alterações</button>
+                <div class="card security-card">
+                    <h3>Segurança</h3>
+                    <label>Senha Atual</label>
+                    <input type="password" placeholder="••••••••">
+                    <label>Nova Senha</label>
+                    <input type="password" id="new-password" placeholder="Mínimo 8 caracteres">
+                    <button onclick="atualizarAdmin()" class="btn-primary">Atualizar Credenciais</button>
+                </div>
+
+                <div class="card prefs-card">
+                    <h3>Preferências de Sistema</h3>
+                    <div class="toggle-group">
+                        <label class="switch-label">
+                            <input type="checkbox" checked> Notificações de Vendas
+                        </label>
+                        <label class="switch-label">
+                            <input type="checkbox" id="darkModeSwitch" onclick="toggleDarkMode()"> Modo Escuro (Beta)
+                        </label>
+                    </div>
                 </div>
             </div>
         </section>
@@ -176,6 +242,7 @@
     </main>
 
     <script src="script.js"></script>
+    <script src="ofertas.js"></script>
     <script src="main.js"></script>
 </body>
 
