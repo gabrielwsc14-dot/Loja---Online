@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como Publicar no GitHub Pages</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            background-color: #f0f2f5; 
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 40px; 
+            background: #3483fa; 
+            color: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
+        .card { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            margin-bottom: 20px; 
+            border-left: 5px solid #3483fa; 
+        }
+        h1, h2 { margin-top: 0; }
+        h2 { color: #3483fa; }
+        .step { 
+            display: inline-block; 
+            width: 30px; 
+            height: 30px; 
+            background: #3483fa; 
+            color: white; 
+            text-align: center; 
+            border-radius: 50%; 
+            font-size: 16px; 
+            font-weight: bold; 
+            margin-right: 10px; 
+            line-height: 30px;
+        }
+        code { 
+            background: #e9ecef; 
+            padding: 3px 6px; 
+            border-radius: 4px; 
+            font-family: monospace; 
+            font-size: 0.9em; 
+            color: #d63384; 
+        }
+        .success-card { 
+            background: #d4edda; 
+            border-left-color: #28a745; 
+            color: #155724; 
+        }
+        .info-card { 
+            background: #d1ecf1; 
+            border-left-color: #17a2b8; 
+            color: #0c5460; 
+        }
+        .warning-card { 
+            background: #fff3cd; 
+            border-left-color: #ffc107; 
+            color: #856404; 
+        }
+        .tip { 
+            font-size: 0.9em; 
+            color: #666; 
+            font-style: italic; 
+            margin-top: 10px; 
+            display: block; 
+        }
+        ol { 
+            padding-left: 20px; 
+        }
+        ol li { 
+            margin-bottom: 15px; 
+        }
+        .url-box {
+            background: #f8f9fa;
+            border: 2px dashed #3483fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #3483fa;
+            font-weight: bold;
+            margin: 20px 0;
+            word-break: break-all;
+        }
+        .screenshot {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🌐 Como Publicar sua Loja no GitHub Pages</h1>
+        <p>Guia completo para hospedar seu site HTML gratuitamente no GitHub</p>
+    </div>
+
+    <div class="card success-card">
+        <h2>✅ Seu Site Está Pronto!</h2>
+        <p>Todos os arquivos necessários já estão configurados corretamente. Você só precisa ativar o GitHub Pages seguindo os passos abaixo.</p>
+    </div>
+
+    <div class="card">
+        <h2><span class="step">1</span> Acesse as Configurações do Repositório</h2>
+        <ol>
+            <li>Vá para o seu repositório no GitHub:<br>
+                <code>https://github.com/gabrielwsc14-dot/Loja---Online</code>
+            </li>
+            <li>Clique na aba <strong>Settings</strong> (Configurações) no topo da página</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2><span class="step">2</span> Encontre a Seção Pages</h2>
+        <ol>
+            <li>No menu lateral esquerdo, role para baixo e clique em <strong>Pages</strong></li>
+            <li>Você verá a página de configuração do GitHub Pages</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2><span class="step">3</span> Configure a Origem (Source)</h2>
+        <ol>
+            <li>Na seção <strong>Build and deployment</strong>, encontre <strong>Source</strong></li>
+            <li>No dropdown <strong>Branch</strong>, selecione: <code>main</code> (ou <code>master</code> se esse for seu branch)</li>
+            <li>No dropdown <strong>Folder</strong>, selecione: <code>/ (root)</code></li>
+            <li>Clique no botão <strong>Save</strong> (Salvar)</li>
+        </ol>
+        <span class="tip">💡 Dica: Se você não ver o branch "main", verifique qual é o branch principal do seu repositório na aba "Code".</span>
+    </div>
+
+    <div class="card">
+        <h2><span class="step">4</span> Aguarde a Publicação</h2>
+        <p>Após salvar as configurações:</p>
+        <ul>
+            <li>O GitHub começará a processar e publicar seu site automaticamente</li>
+            <li>Isso pode levar de <strong>1 a 5 minutos</strong></li>
+            <li>Você verá uma mensagem na parte superior da página indicando o progresso</li>
+            <li>Quando concluído, aparecerá um banner verde com o link do seu site</li>
+        </ul>
+    </div>
+
+    <div class="card success-card">
+        <h2><span class="step">5</span> Acesse Seu Site!</h2>
+        <p>Seu site estará disponível no seguinte endereço:</p>
+        <div class="url-box">
+            https://gabrielwsc14-dot.github.io/Loja---Online/
+        </div>
+        <p>Você pode compartilhar este link com qualquer pessoa para que elas acessem sua loja online!</p>
+    </div>
+
+    <div class="card info-card">
+        <h2>🔄 Atualizando Seu Site</h2>
+        <p>Toda vez que você fizer alterações no código e enviar para o GitHub (git push), o site será atualizado automaticamente em alguns minutos.</p>
+        <p><strong>Comandos básicos:</strong></p>
+        <pre><code>git add .
+git commit -m "Sua mensagem de atualização"
+git push origin main</code></pre>
+        <span class="tip">💡 O GitHub Pages atualiza automaticamente após cada push. Aguarde alguns minutos para ver as mudanças.</span>
+    </div>
+
+    <div class="card warning-card">
+        <h2>⚠️ Observações Importantes</h2>
+        <ul>
+            <li><strong>Repositório Público:</strong> Para usar GitHub Pages gratuitamente, seu repositório precisa ser público</li>
+            <li><strong>Nome do Arquivo:</strong> O arquivo principal deve se chamar <code>index.html</code> (já está correto!)</li>
+            <li><strong>Caminhos:</strong> Use sempre caminhos relativos para arquivos CSS, JS e imagens (já está correto!)</li>
+            <li><strong>Cache:</strong> Se as mudanças não aparecerem imediatamente, limpe o cache do navegador (Ctrl+F5 ou Cmd+Shift+R)</li>
+            <li><strong>HTTPS:</strong> Seu site será servido automaticamente via HTTPS (seguro)</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>🎯 Domínio Personalizado (Opcional)</h2>
+        <p>Se você quiser usar seu próprio domínio (como <code>www.minhaloja.com.br</code>):</p>
+        <ol>
+            <li>Compre um domínio em um registrador (como Registro.br, GoDaddy, etc.)</li>
+            <li>Na mesma página de Settings > Pages, você encontrará a opção <strong>Custom domain</strong></li>
+            <li>Digite seu domínio e siga as instruções para configurar os registros DNS</li>
+        </ol>
+        <span class="tip">💡 Esta etapa é opcional. Seu site funciona perfeitamente com o endereço github.io.</span>
+    </div>
+
+    <div class="card info-card">
+        <h2>❓ Problemas Comuns e Soluções</h2>
+        <h3>O site não está aparecendo:</h3>
+        <ul>
+            <li>Verifique se aguardou os 5 minutos iniciais</li>
+            <li>Confirme que o repositório é público</li>
+            <li>Verifique se selecionou o branch e pasta corretos</li>
+        </ul>
+        <h3>As imagens não aparecem:</h3>
+        <ul>
+            <li>Verifique se a pasta <code>img</code> está no repositório</li>
+            <li>Confirme que os caminhos são relativos (sem <code>/</code> no início)</li>
+        </ul>
+        <h3>Os estilos não estão funcionando:</h3>
+        <ul>
+            <li>Verifique se os arquivos CSS estão no repositório</li>
+            <li>Limpe o cache do navegador</li>
+        </ul>
+    </div>
+
+    <div class="card success-card">
+        <h2>🎉 Pronto!</h2>
+        <p>Agora você tem um site publicado gratuitamente no GitHub Pages. Compartilhe o link com seus clientes e comece a vender!</p>
+        <p><strong>Link do seu site:</strong></p>
+        <div class="url-box">
+            https://gabrielwsc14-dot.github.io/Loja---Online/
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📚 Recursos Adicionais</h2>
+        <ul>
+            <li><a href="https://docs.github.com/pt/pages" target="_blank">Documentação Oficial do GitHub Pages (Português)</a></li>
+            <li><a href="index.html">Manual do Administrador</a></li>
+            <li><a href="suporte-tecnico.html">Suporte Técnico</a></li>
+        </ul>
+    </div>
+
+</body>
+</html>
