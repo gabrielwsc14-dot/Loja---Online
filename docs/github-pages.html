@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como Publicar no GitHub Pages</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            background-color: #f0f2f5; 
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 40px; 
+            background: #3483fa; 
+            color: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
+        .card { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            margin-bottom: 20px; 
+            border-left: 5px solid #3483fa; 
+        }
+        h1, h2 { margin-top: 0; }
+        h2 { color: #3483fa; }
+        .step { 
+            display: inline-block; 
+            width: 30px; 
+            height: 30px; 
+            background: #3483fa; 
+            color: white; 
+            text-align: center; 
+            border-radius: 50%; 
+            font-size: 16px; 
+            font-weight: bold; 
+            margin-right: 10px; 
+            line-height: 30px;
+        }
+        code { 
+            background: #e9ecef; 
+            padding: 3px 6px; 
+            border-radius: 4px; 
+            font-family: monospace; 
+            font-size: 0.9em; 
+            color: #d63384; 
+        }
+        .success-card { 
+            background: #d4edda; 
+            border-left-color: #28a745; 
+            color: #155724; 
+        }
+        .info-card { 
+            background: #d1ecf1; 
+            border-left-color: #17a2b8; 
+            color: #0c5460; 
+        }
+        .warning-card { 
+            background: #fff3cd; 
+            border-left-color: #ffc107; 
+            color: #856404; 
+        }
+        .tip { 
+            font-size: 0.9em; 
+            color: #666; 
+            font-style: italic; 
+            margin-top: 10px; 
+            display: block; 
+        }
+        ol { 
+            padding-left: 20px; 
+        }
+        ol li { 
+            margin-bottom: 15px; 
+        }
+        .url-box {
+            background: #f8f9fa;
+            border: 2px dashed #3483fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #3483fa;
+            font-weight: bold;
+            margin: 20px 0;
+            word-break: break-all;
+        }
+        .screenshot {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🌐 Como Publicar QUALQUER Site HTML no GitHub Pages</h1>
+        <p>Guia visual completo e prático para hospedar sites gratuitamente no GitHub</p>
+    </div>
+
+    <div class="card success-card">
+        <h2>✅ O que você vai aprender</h2>
+        <ul>
+            <li>Como publicar qualquer pasta HTML gratuitamente</li>
+            <li>3 métodos diferentes de publicação (raiz, /docs, gh-pages)</li>
+            <li>Resolver problemas comuns (404, CSS não carrega, etc.)</li>
+            <li>Atualizar seu site automaticamente</li>
+            <li>Usar domínio personalizado (opcional)</li>
+        </ul>
+    </div>
+
+    <div class="card info-card">
+        <h2>📋 Pré-requisitos</h2>
+        <ul>
+            <li>✅ Ter uma conta no GitHub (gratuita)</li>
+            <li>✅ Seu site em HTML, CSS e JavaScript</li>
+            <li>✅ Um arquivo <code>index.html</code> (obrigatório!)</li>
+            <li>✅ Repositório público (GitHub Pages é grátis só para públicos)</li>
+        </ul>
+        <span class="tip">💡 Não sabe usar Git? Você pode fazer tudo pela interface web do GitHub!</span>
+    </div>
+
+    <div class="card">
+        <h2>🎯 Escolha o Método de Publicação</h2>
+        <h3>Método 1: Raiz do Repositório (/ root) - MAIS COMUM</h3>
+        <p><strong>Use quando:</strong> Seus arquivos HTML estão na pasta principal</p>
+        <p><strong>Estrutura:</strong></p>
+        <pre><code>seu-repositorio/
+├── index.html  ← Arquivo principal
+├── style.css
+├── script.js
+└── imagens/</code></pre>
+
+        <h3>Método 2: Pasta /docs - RECOMENDADO</h3>
+        <p><strong>Use quando:</strong> Quer separar código-fonte da versão publicada</p>
+        <p><strong>Estrutura:</strong></p>
+        <pre><code>seu-repositorio/
+├── src/         ← Código fonte
+└── docs/        ← Site para publicar
+    ├── index.html
+    ├── style.css
+    └── imagens/</code></pre>
+
+        <h3>Método 3: Branch gh-pages - AVANÇADO</h3>
+        <p><strong>Use quando:</strong> Quer manter código e site 100% separados</p>
+        <span class="tip">💡 Neste guia, vamos usar o Método 1 (raiz). Os outros métodos são similares.</span>
+    </div>
+
+    <div class="card">
+        <h2><span class="step">1</span> Prepare Seus Arquivos</h2>
+        <h3>✅ Checklist Obrigatória:</h3>
+        <ul>
+            <li><strong>Arquivo index.html:</strong> Deve existir e ter exatamente este nome</li>
+            <li><strong>Caminhos relativos:</strong> Use <code>href="style.css"</code> não <code>href="/style.css"</code></li>
+            <li><strong>Nomes minúsculos:</strong> Use <code>sobre.html</code> não <code>Sobre.html</code></li>
+            <li><strong>Sem espaços:</strong> Use <code>minha-foto.jpg</code> não <code>minha foto.jpg</code></li>
+        </ul>
+        <p><strong>Exemplo de HTML correto:</strong></p>
+        <pre><code>&lt;!-- ✅ CORRETO --&gt;
+&lt;link rel="stylesheet" href="style.css"&gt;
+&lt;img src="imagens/logo.png"&gt;
+&lt;a href="sobre.html"&gt;Sobre&lt;/a&gt;
+
+&lt;!-- ❌ ERRADO --&gt;
+&lt;link rel="stylesheet" href="/style.css"&gt;  ← Barra no início
+&lt;img src="C:/site/imagens/logo.png"&gt;  ← Caminho absoluto</code></pre>
+    </div>
+
+    <div class="card">
+        <h2><span class="step">2</span> Envie para o GitHub</h2>
+        
+        <h3>Opção A: Usando a Interface Web (Mais Fácil)</h3>
+        <ol>
+            <li>Acesse <a href="https://github.com/new" target="_blank">github.com/new</a> e crie um repositório</li>
+            <li>Clique em <strong>uploading an existing file</strong></li>
+            <li>Arraste todos os seus arquivos HTML, CSS, JS e imagens</li>
+            <li>Clique em <strong>Commit changes</strong></li>
+        </ol>
+
+        <h3>Opção B: Usando Git (Terminal)</h3>
+        <pre><code># Na pasta do seu site:
+git init
+git add .
+git commit -m "Primeiro commit"
+git branch -M main
+git remote add origin https://github.com/SEU-USUARIO/SEU-REPO.git
+git push -u origin main</code></pre>
+    </div>
+
+    <div class="card">
+        <h2><span class="step">3</span> Ative o GitHub Pages</h2>
+        <ol>
+            <li>No seu repositório, clique em <strong>Settings</strong> (topo da página)</li>
+            <li>No menu lateral esquerdo, clique em <strong>Pages</strong></li>
+            <li>Em <strong>Source</strong>, selecione:
+                <ul>
+                    <li><strong>Branch:</strong> <code>main</code></li>
+                    <li><strong>Folder:</strong> <code>/ (root)</code> ou <code>/docs</code> (conforme seu método)</li>
+                </ul>
+            </li>
+            <li>Clique em <strong>Save</strong></li>
+        </ol>
+        <span class="tip">💡 Se não ver o branch "main", verifique se é "master" na aba Code.</span>
+    </div>
+
+    <div class="card">
+        <h2><span class="step">4</span> Aguarde a Publicação</h2>
+        <p>Após salvar:</p>
+        <ul>
+            <li>⏱️ <strong>Primeira vez:</strong> 2 a 10 minutos</li>
+            <li>🔄 <strong>Atualizações:</strong> 30 segundos a 5 minutos</li>
+            <li>📧 Você receberá um email quando estiver pronto</li>
+            <li>✅ Um banner verde aparecerá com o link do seu site</li>
+        </ul>
+    </div>
+
+    <div class="card success-card">
+        <h2><span class="step">5</span> Acesse Seu Site!</h2>
+        <p>Seu site estará disponível em:</p>
+        <div class="url-box">
+            https://SEU-USUARIO.github.io/NOME-DO-REPOSITORIO/
+        </div>
+        <p><strong>Exemplo real:</strong></p>
+        <div class="url-box">
+            https://joaosilva.github.io/meu-portfolio/
+        </div>
+        <p>✅ Compartilhe este link com qualquer pessoa!</p>
+        <p>✅ Funciona em qualquer dispositivo (PC, celular, tablet)</p>
+        <p>✅ HTTPS automático (seguro com cadeado 🔒)</p>
+    </div>
+
+    <div class="card info-card">
+        <h2>🔄 Como Atualizar Seu Site</h2>
+        <p>Depois de publicado, qualquer alteração é atualizada automaticamente!</p>
+        
+        <h3>Opção A: Interface Web do GitHub</h3>
+        <ol>
+            <li>No repositório, clique no arquivo que quer editar</li>
+            <li>Clique no ícone de lápis ✏️ (Edit)</li>
+            <li>Faça suas alterações</li>
+            <li>Role para baixo e clique em <strong>Commit changes</strong></li>
+            <li>Aguarde 1-5 minutos → Site atualizado! 🎉</li>
+        </ol>
+
+        <h3>Opção B: Terminal/Git</h3>
+        <pre><code># 1. Edite seus arquivos HTML/CSS/JS
+
+# 2. Adicione as mudanças
+git add .
+
+# 3. Faça um commit
+git commit -m "Atualizei o menu principal"
+
+# 4. Envie para o GitHub
+git push origin main
+
+# 5. Aguarde 1-5 minutos → Site atualizado! 🎉</code></pre>
+        <span class="tip">💡 Limpe o cache do navegador (Ctrl+Shift+R) se não ver as mudanças.</span>
+    </div>
+
+    <div class="card">
+        <h2>📁 Arquivo .nojekyll (Importante!)</h2>
+        <p>Se seu site tem pastas ou arquivos que começam com <code>_</code> (underscore), crie um arquivo vazio chamado <code>.nojekyll</code> na raiz:</p>
+        
+        <h3>Por que fazer isso?</h3>
+        <p>O GitHub Pages usa Jekyll por padrão, que ignora pastas como <code>_css</code>, <code>_js</code>, <code>_imagens</code>. O arquivo <code>.nojekyll</code> desativa isso.</p>
+
+        <h3>Como criar (Interface Web):</h3>
+        <ol>
+            <li>No repositório, clique em <strong>Add file</strong> → <strong>Create new file</strong></li>
+            <li>Nome do arquivo: <code>.nojekyll</code></li>
+            <li>Deixe em branco (arquivo vazio)</li>
+            <li>Clique em <strong>Commit new file</strong></li>
+        </ol>
+
+        <h3>Como criar (Terminal):</h3>
+        <pre><code>touch .nojekyll
+git add .nojekyll
+git commit -m "Add .nojekyll"
+git push</code></pre>
+    </div>
+
+    <div class="card warning-card">
+        <h2>⚠️ Observações Importantes</h2>
+        <h3>Requisitos Obrigatórios:</h3>
+        <ul>
+            <li>✅ <strong>Repositório Público:</strong> GitHub Pages grátis só para públicos</li>
+            <li>✅ <strong>index.html:</strong> Arquivo principal DEVE ter este nome exato</li>
+            <li>✅ <strong>Caminhos Relativos:</strong> Nunca use <code>/</code> no início dos caminhos</li>
+            <li>✅ <strong>Minúsculas:</strong> Nomes de arquivos em minúsculas (case-sensitive)</li>
+            <li>✅ <strong>Sem Espaços:</strong> Use <code>-</code> ou <code>_</code> ao invés de espaços</li>
+        </ul>
+        
+        <h3>O que GitHub Pages NÃO suporta:</h3>
+        <ul>
+            <li>❌ PHP, Python, Ruby (linguagens de backend)</li>
+            <li>❌ Banco de dados (MySQL, PostgreSQL)</li>
+            <li>❌ Upload de arquivos pelo usuário</li>
+            <li>❌ APIs privadas (mas pode chamar APIs públicas externas)</li>
+        </ul>
+        
+        <h3>O que você PODE fazer:</h3>
+        <ul>
+            <li>✅ HTML, CSS, JavaScript</li>
+            <li>✅ Frameworks JavaScript (React, Vue, Angular compilados)</li>
+            <li>✅ Integrar APIs externas (Stripe, PayPal, Firebase, etc.)</li>
+            <li>✅ LocalStorage e SessionStorage</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>🎯 Domínio Personalizado (Opcional)</h2>
+        <p>Quer usar seu próprio domínio? (ex: <code>www.seusite.com.br</code>)</p>
+
+        <h3>Passo 1: Compre um Domínio</h3>
+        <p>Registradores populares no Brasil:</p>
+        <ul>
+            <li><strong>Registro.br</strong> - Domínios .br (mais barato)</li>
+            <li><strong>GoDaddy</strong> - Internacional</li>
+            <li><strong>HostGator</strong> - Brasil</li>
+            <li><strong>Namecheap</strong> - Internacional (barato)</li>
+        </ul>
+
+        <h3>Passo 2: Configure no GitHub</h3>
+        <ol>
+            <li>Em <strong>Settings</strong> > <strong>Pages</strong></li>
+            <li>Na seção <strong>Custom domain</strong>, digite seu domínio</li>
+            <li>Clique em <strong>Save</strong></li>
+            <li>Marque <strong>Enforce HTTPS</strong> (pode demorar algumas horas)</li>
+        </ol>
+
+        <h3>Passo 3: Configure DNS no Registrador</h3>
+        <p>No painel do seu registrador de domínio, adicione estes registros:</p>
+
+        <h4>Para domínio raiz (seusite.com.br):</h4>
+        <pre><code>Tipo A - IP 185.199.108.153
+Tipo A - IP 185.199.109.153
+Tipo A - IP 185.199.110.153
+Tipo A - IP 185.199.111.153</code></pre>
+
+        <h4>Para subdomínio www (www.seusite.com.br):</h4>
+        <pre><code>Tipo CNAME - Valor: SEU-USUARIO.github.io</code></pre>
+
+        <h3>Passo 4: Aguarde</h3>
+        <p>DNS pode levar de <strong>1 hora a 48 horas</strong> para propagar. Teste em: <a href="https://dnschecker.org" target="_blank">dnschecker.org</a></p>
+
+        <span class="tip">💡 Esta etapa é 100% opcional. Seu site funciona perfeitamente com o endereço github.io gratuito!</span>
+    </div>
+
+    <div class="card">
+        <h2>💡 Dicas Profissionais</h2>
+        <ul>
+            <li>🔍 <strong>SEO:</strong> Adicione meta tags no <code>&lt;head&gt;</code> para Google
+                <pre><code>&lt;meta name="description" content="Descrição do site"&gt;
+&lt;meta name="keywords" content="palavras,chave"&gt;
+&lt;meta property="og:title" content="Título para redes sociais"&gt;</code></pre>
+            </li>
+            <li>📱 <strong>Responsivo:</strong> Use media queries ou frameworks (Bootstrap, Tailwind)</li>
+            <li>⚡ <strong>Performance:</strong> Otimize imagens com <a href="https://tinypng.com" target="_blank">TinyPNG</a> ou <a href="https://squoosh.app" target="_blank">Squoosh</a></li>
+            <li>🔒 <strong>Segurança:</strong> Nunca comite senhas ou chaves de API no código</li>
+            <li>📊 <strong>Analytics:</strong> Adicione Google Analytics para ver visitantes</li>
+            <li>🎨 <strong>Favicon:</strong> Adicione <code>&lt;link rel="icon" href="favicon.ico"&gt;</code></li>
+        </ul>
+    </div>
+
+    <div class="card info-card">
+        <h2>📚 Exemplos Práticos</h2>
+        
+        <h3>Exemplo 1: Site Simples (Método Raiz)</h3>
+        <pre><code>meu-portfolio/
+├── index.html       ← Página inicial (obrigatório)
+├── sobre.html       ← Página sobre mim
+├── projetos.html    ← Página projetos
+├── contato.html     ← Página contato
+├── style.css        ← Estilos
+├── script.js        ← JavaScript
+└── imagens/
+    ├── logo.png
+    └── foto.jpg
+
+Configuração GitHub Pages:
+✅ Branch: main
+✅ Folder: / (root)</code></pre>
+
+        <h3>Exemplo 2: Projeto Organizado (Método /docs)</h3>
+        <pre><code>meu-projeto/
+├── README.md
+├── src/             ← Código fonte (não publicado)
+│   ├── components/
+│   └── utils/
+└── docs/            ← Site publicado
+    ├── index.html
+    ├── css/
+    │   └── style.css
+    ├── js/
+    │   └── app.js
+    └── assets/
+        └── imagens/
+
+Configuração GitHub Pages:
+✅ Branch: main
+✅ Folder: /docs</code></pre>
+
+        <h3>Exemplo 3: Links Entre Páginas</h3>
+        <pre><code>&lt;!-- index.html --&gt;
+&lt;nav&gt;
+    &lt;a href="index.html"&gt;Início&lt;/a&gt;
+    &lt;a href="sobre.html"&gt;Sobre&lt;/a&gt;
+    &lt;a href="projetos.html"&gt;Projetos&lt;/a&gt;
+    &lt;a href="contato.html"&gt;Contato&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;!-- Subpasta: paginas/sobre.html --&gt;
+&lt;nav&gt;
+    &lt;a href="../index.html"&gt;Início&lt;/a&gt;  ← Voltar uma pasta
+    &lt;a href="sobre.html"&gt;Sobre&lt;/a&gt;
+    &lt;a href="projetos.html"&gt;Projetos&lt;/a&gt;
+&lt;/nav&gt;</code></pre>
+    </div>
+
+    <div class="card info-card">
+        <h2>❓ Problemas Comuns e Soluções</h2>
+        
+        <h3>🔴 Problema 1: Site não aparece / Erro 404</h3>
+        <p><strong>Sintomas:</strong> Ao acessar o link, aparece "404 - File not found"</p>
+        <p><strong>Soluções:</strong></p>
+        <ul>
+            <li>✅ <strong>Verifique o arquivo index.html:</strong> Deve estar na pasta raiz (ou /docs se escolheu este método)</li>
+            <li>✅ <strong>Aguarde:</strong> Primeira publicação pode levar até 10 minutos</li>
+            <li>✅ <strong>Repositório público:</strong> Vá em Settings > General e verifique se não está "Private"</li>
+            <li>✅ <strong>Branch correto:</strong> Em Settings > Pages, confirme que selecionou o branch certo</li>
+            <li>✅ <strong>Limpe o cache:</strong> Pressione Ctrl+Shift+R (Windows) ou Cmd+Shift+R (Mac)</li>
+        </ul>
+
+        <h3>🔴 Problema 2: CSS e JavaScript não carregam</h3>
+        <p><strong>Sintomas:</strong> Site aparece, mas sem estilos ou funcionalidades</p>
+        <p><strong>Soluções:</strong></p>
+        <ul>
+            <li>✅ <strong>Caminhos relativos:</strong> Use <code>href="style.css"</code> NÃO <code>href="/style.css"</code></li>
+            <li>✅ <strong>Arquivo .nojekyll:</strong> Crie se usa pastas com _ (underscore)</li>
+            <li>✅ <strong>Verifique nomes:</strong> CSS/JS devem ter nomes em minúsculas</li>
+            <li>✅ <strong>Console do navegador:</strong> Pressione F12 e veja erros na aba Console</li>
+        </ul>
+        <p><strong>Exemplo correto vs incorreto:</strong></p>
+        <pre><code>✅ CORRETO:
+&lt;link rel="stylesheet" href="css/style.css"&gt;
+&lt;script src="js/script.js"&gt;&lt;/script&gt;
+
+❌ ERRADO:
+&lt;link rel="stylesheet" href="/css/style.css"&gt;  ← Barra no início
+&lt;script src="C:/site/js/script.js"&gt;&lt;/script&gt;  ← Caminho absoluto</code></pre>
+
+        <h3>🔴 Problema 3: Imagens não aparecem</h3>
+        <p><strong>Sintomas:</strong> Ícone de imagem quebrada 🖼️❌</p>
+        <p><strong>Soluções:</strong></p>
+        <ul>
+            <li>✅ <strong>Arquivos no repositório:</strong> Confirme que as imagens foram enviadas</li>
+            <li>✅ <strong>Caminhos corretos:</strong> Use <code>src="imagens/logo.png"</code></li>
+            <li>✅ <strong>Extensões minúsculas:</strong> Use <code>.jpg</code> não <code>.JPG</code></li>
+            <li>✅ <strong>Nomes sem espaços:</strong> <code>minha-foto.jpg</code> não <code>minha foto.jpg</code></li>
+        </ul>
+
+        <h3>🔴 Problema 4: Mudanças não aparecem</h3>
+        <p><strong>Sintomas:</strong> Fiz alterações mas o site continua antigo</p>
+        <p><strong>Soluções:</strong></p>
+        <ul>
+            <li>✅ <strong>Aguarde:</strong> Pode demorar até 5 minutos para atualizar</li>
+            <li>✅ <strong>Verifique o commit:</strong> Confirme que fez push para o GitHub</li>
+            <li>✅ <strong>Limpe cache:</strong> Ctrl+Shift+R ou abra em modo anônimo</li>
+            <li>✅ <strong>Verifique status:</strong> Em Settings > Pages, veja se há erros</li>
+        </ul>
+
+        <h3>🔴 Problema 5: Links quebrados entre páginas</h3>
+        <p><strong>Sintomas:</strong> Ao clicar em links internos, aparece 404</p>
+        <p><strong>Soluções:</strong></p>
+        <ul>
+            <li>✅ <strong>Use nomes exatos:</strong> <code>sobre.html</code> não <code>Sobre.html</code></li>
+            <li>✅ <strong>Caminhos relativos:</strong> <code>&lt;a href="contato.html"&gt;</code></li>
+            <li>✅ <strong>Arquivos existem:</strong> Confirme que as páginas estão no repositório</li>
+        </ul>
+
+        <h3>🔴 Problema 6: "Build" falhou</h3>
+        <p><strong>Sintomas:</strong> Email dizendo que o build falhou</p>
+        <p><strong>Soluções:</strong></p>
+        <ul>
+            <li>✅ <strong>Verifique Actions:</strong> Aba "Actions" no repositório mostra o erro</li>
+            <li>✅ <strong>Arquivo .nojekyll:</strong> Adicione se não tiver</li>
+            <li>✅ <strong>Sintaxe HTML:</strong> Use validador em <a href="https://validator.w3.org/" target="_blank">validator.w3.org</a></li>
+        </ul>
+    </div>
+
+    <div class="card success-card">
+        <h2>🎉 Parabéns! Você Agora Sabe Publicar Sites no GitHub Pages!</h2>
+        <p>Agora você tem todo o conhecimento para publicar qualquer site HTML gratuitamente.</p>
+        
+        <h3>📝 Resumo Rápido:</h3>
+        <ol>
+            <li>✅ Tenha um <code>index.html</code> e use caminhos relativos</li>
+            <li>✅ Crie/use um repositório público no GitHub</li>
+            <li>✅ Envie seus arquivos para o repositório</li>
+            <li>✅ Ative em Settings > Pages > Source > Branch + Folder</li>
+            <li>✅ Aguarde 2-10 minutos</li>
+            <li>✅ Acesse: <code>https://usuario.github.io/repositorio/</code></li>
+        </ol>
+
+        <h3>🔗 Seu site terá:</h3>
+        <ul>
+            <li>✅ Hospedagem 100% gratuita e ilimitada</li>
+            <li>✅ HTTPS automático (🔒 cadeado de segurança)</li>
+            <li>✅ Atualizações automáticas a cada push</li>
+            <li>✅ Sem limite de visitantes (até 100GB banda/mês)</li>
+            <li>✅ Funciona em todos os dispositivos</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>📖 Recursos Adicionais</h2>
+        <h3>Documentação Oficial:</h3>
+        <ul>
+            <li><a href="https://docs.github.com/pt/pages" target="_blank">📘 GitHub Pages - Documentação em Português</a></li>
+            <li><a href="https://pages.github.com/" target="_blank">🌐 GitHub Pages - Site Oficial</a></li>
+        </ul>
+
+        <h3>Ferramentas Úteis:</h3>
+        <ul>
+            <li><a href="https://validator.w3.org/" target="_blank">🔍 Validador HTML do W3C</a></li>
+            <li><a href="https://jigsaw.w3.org/css-validator/" target="_blank">🎨 Validador CSS</a></li>
+            <li><a href="https://tinypng.com/" target="_blank">📸 TinyPNG - Comprimir Imagens</a></li>
+            <li><a href="https://squoosh.app/" target="_blank">🖼️ Squoosh - Otimizar Imagens</a></li>
+            <li><a href="https://dnschecker.org/" target="_blank">🌍 DNS Checker - Verificar DNS</a></li>
+        </ul>
+
+        <h3>Templates e Inspiração:</h3>
+        <ul>
+            <li><a href="https://html5up.net/" target="_blank">🎨 HTML5 UP - Templates Gratuitos</a></li>
+            <li><a href="https://startbootstrap.com/" target="_blank">💼 Start Bootstrap - Templates</a></li>
+            <li><a href="https://codepen.io/" target="_blank">🎯 CodePen - Exemplos e Inspiração</a></li>
+        </ul>
+    </div>
+
+    <div class="card warning-card">
+        <h2>❓ Perguntas Frequentes</h2>
+        
+        <h3>É realmente grátis?</h3>
+        <p>✅ Sim! 100% gratuito para repositórios públicos, sem custo escondido.</p>
+
+        <h3>Posso usar PHP, MySQL, banco de dados?</h3>
+        <p>❌ Não. GitHub Pages só suporta sites estáticos (HTML/CSS/JS). Para backend, use:</p>
+        <ul>
+            <li>• <strong>Netlify</strong> ou <strong>Vercel</strong> (para sites dinâmicos)</li>
+            <li>• <strong>Firebase</strong> (para banco de dados NoSQL)</li>
+            <li>• <strong>Heroku</strong> ou <strong>Railway</strong> (para backend completo)</li>
+        </ul>
+
+        <h3>Quantos sites posso ter?</h3>
+        <p>✅ Ilimitados! Um site por repositório, sem limite de repositórios.</p>
+
+        <h3>Posso vender produtos online?</h3>
+        <p>✅ Sim, integrando com APIs de pagamento:</p>
+        <ul>
+            <li>• <strong>Stripe</strong>, <strong>PayPal</strong>, <strong>Mercado Pago</strong></li>
+            <li>• <strong>PagSeguro</strong>, <strong>Cielo</strong></li>
+        </ul>
+
+        <h3>Tem limite de visitantes?</h3>
+        <p>⚠️ Limites do GitHub Pages:</p>
+        <ul>
+            <li>• <strong>100 GB</strong> de banda por mês</li>
+            <li>• <strong>1 GB</strong> de espaço total</li>
+            <li>• <strong>10 builds</strong> por hora</li>
+        </ul>
+        <p>Suficiente para a maioria dos sites pequenos e médios.</p>
+
+        <h3>Meu site vai sair do ar?</h3>
+        <p>✅ Não! Uma vez publicado, fica online indefinidamente (enquanto o repositório existir).</p>
+
+        <h3>Posso usar React, Vue, Angular?</h3>
+        <p>✅ Sim! Mas você precisa compilar primeiro (<code>npm run build</code>) e publicar a pasta <code>dist/</code> ou <code>build/</code>.</p>
+    </div>
+
+</body>
+</html>
