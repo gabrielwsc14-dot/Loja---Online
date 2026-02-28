@@ -1,0 +1,13 @@
+[build]
+command = "echo 'BabyShop com Supabase - Deploy no Netlify'"
+publish = ".."
+
+# Redirect para root - serve o index.html para todas as rotas
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+
+# Exemplo: se quiser servir uma função serverless para sync (opcional)
+# [[functions]]
+# node-bundler = "esbuild"

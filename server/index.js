@@ -3,75 +3,50 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const fsdb = require('./fsdb');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
 
 const ROOT = path.resolve(__dirname, '..');
-const DB_PATH = path.join(ROOT, 'database.json');
 const SYNC_PREFIX = '/__sync';
 
-function readDB() {
-  try {
-    const txt = fs.readFileSync(DB_PATH, 'utf8');
-    return JSON.parse(txt);
-  } catch (e) {
-    return {};
-  }
-}
-
-function writeDB(obj) {
-  try {
-    fs.writeFileSync(DB_PATH, JSON.stringify(obj, null, 2), 'utf8');
-    return true;
-  } catch (e) {
-    console.error('Failed to write DB', e);
-    return false;
-  }
-}
+// DB logic moved to server/fsdb.js
 
 // API: get current DB
 app.get('/api/db', (req, res) => {
-  res.json(readDB());
+  res.json(fsdb.readFull());
 });
 
 // API: sync/overwrite or merge incoming DB
-app.post('/api/sync', (req, res) => {
-  let incoming = req.body;
-  if (!incoming) return res.status(400).json({ error: 'missing body' });
-  // allow both {db: {...}} and raw db object
-  if (incoming.db) incoming = incoming.db;
+// Atomic patch endpoint: accepts { id, field, value, version }
+app.post('/api/patch', (req, res) => {
+  try {
+    const body = req.body || {};
+    const { id, field, value, version } = body;
+    if (!id || !field) return res.status(400).json({ error: 'missing id or field' });
 
-  const server = readDB();
-
-  // merge helper: add local-only items into server arrays by id
-  const merged = Object.assign({}, server);
-  for (const key of Object.keys(incoming)) {
-    const sVal = server[key];
-    const iVal = incoming[key];
-    if (Array.isArray(sVal) && Array.isArray(iVal)) {
-      const map = new Map();
-      sVal.forEach(item => {
-        const k = (item && item.id !== undefined) ? item.id : JSON.stringify(item);
-        map.set(k, item);
-      });
-      iVal.forEach(item => {
-        const k = (item && item.id !== undefined) ? item.id : JSON.stringify(item);
-        if (!map.has(k)) map.set(k, item);
-      });
-      merged[key] = Array.from(map.values());
-    } else if (sVal && typeof sVal === 'object' && iVal && typeof iVal === 'object') {
-      merged[key] = Object.assign({}, sVal, iVal);
-    } else {
-      // prefer server value unless server missing
-      merged[key] = sVal === undefined ? iVal : sVal;
+    const result = fsdb.patchById(id, field, value, version);
+    if (!result.ok) {
+      if (result.error === 'version-mismatch') {
+        return res.status(409).json({ error: 'version-mismatch', currentVersion: result.currentVersion });
+      }
+      if (result.error === 'not-found') return res.status(404).json({ error: 'not-found' });
+      if (result.error === 'write-failed') return res.status(500).json({ error: 'internal', message: result.detail || 'write failed' });
+      return res.status(400).json({ error: result.error || 'failed' });
     }
-  }
 
-  const ok = writeDB(merged);
-  if (!ok) return res.status(500).json({ error: 'failed to write db' });
-  return res.json({ ok: true, db: merged });
+    return res.json({ ok: true, item: result.item, version: result.newVersion, updatedAt: result.updatedAt });
+  } catch (e) {
+    console.error('Unexpected error in /api/patch', e);
+    return res.status(500).json({ error: 'internal', message: 'unexpected' });
+  }
+});
+
+// Serve the fix-script-order script
+app.get(SYNC_PREFIX + '/fix-script-order.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'fix-script-order.js'));
 });
 
 // Serve the client sync script from a dedicated prefix
@@ -79,19 +54,21 @@ app.get(SYNC_PREFIX + '/client-sync.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'client-sync.js'));
 });
 
-// Serve .html files with injection of the sync script (no on-disk changes)
+// Serve .html files with injection of fix-script-order + sync script (no on-disk changes)
 app.get('/*.html', (req, res, next) => {
   const filePath = path.join(ROOT, req.path);
   if (!fs.existsSync(filePath)) return next();
   let html = fs.readFileSync(filePath, 'utf8');
-  const inject = `<script src="${SYNC_PREFIX}/client-sync.js"></script>`;
-  // inject before </body> if present, otherwise before </head>
-  if (html.includes('</body>')) {
-    html = html.replace('</body>', inject + '\n</body>');
-  } else if (html.includes('</head>')) {
-    html = html.replace('</head>', inject + '\n</head>');
+  // Inject BOTH scripts before </head> to fix script loading order
+  const injectFix = `<script src="${SYNC_PREFIX}/fix-script-order.js"></script>`;
+  const injectSync = `<script src="${SYNC_PREFIX}/client-sync.js"></script>`;
+  
+  if (html.includes('</head>')) {
+    html = html.replace('</head>', injectFix + '\n' + injectSync + '\n</head>');
+  } else if (html.includes('</body>')) {
+    html = html.replace('</body>', injectFix + '\n' + injectSync + '\n</body>');
   } else {
-    html = inject + '\n' + html;
+    html = injectFix + '\n' + injectSync + '\n' + html;
   }
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(html);

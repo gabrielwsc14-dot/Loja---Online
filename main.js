@@ -222,7 +222,9 @@ window.filtrarPedidos = (status, btn) => {
 
 // 1. Carregar dados ao abrir a seção
 
-document.querySelector('a[href="#config"]').addEventListener('click', () => {
+const configLink = document.querySelector('a[href="#config"]');
+if (configLink) {
+configLink.addEventListener('click', () => {
 
     const admin = JSON.parse(localStorage.getItem('usuarioLogadoDados')) || { nome: 'Admin', email: 'admin@loja.com', avatar: 'AM' };
 
@@ -233,7 +235,7 @@ document.querySelector('a[href="#config"]').addEventListener('click', () => {
     if(admin.avatar) document.getElementById('avatarPreview').innerText = admin.avatar.substring(0,2).toUpperCase();
 
 });
-
+}
 
 
 // 2. Alterar Foto (Simulação com Iniciais)

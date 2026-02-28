@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Conta - JH Baby</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Sincronização com Supabase -->
+    <script src="server/fix-script-order.js"></script>
+    <script>
+      window.__SUPABASE_URL__ = 'https://gvigxcdaymmtgyqmvxkk.supabase.co';
+      window.__SUPABASE_KEY__ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2aWd4Y2RheW1tdGd5cW12eGtrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg0MjMyMzAsImV4cCI6MjA4Mzk5OTIzMH0.WGwBMe091m_OcMvG8IW213IhexcNzM3bXcUFdReEasg';
+    </script>
+    <script src="server/supabase-sync.js"></script>
     <style>
         body {
             background: #f5f5f5;
@@ -177,6 +185,7 @@
 </head>
 
 <body>
+    <nav class="user-nav" style="display: none;"></nav>
 
     <div class="account-wrapper">
         <header class="acc-header">

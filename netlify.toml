@@ -1,0 +1,14 @@
+[build]
+publish = "."
+
+# Permite servir arquivos de qualquer pasta
+[[redirects]]
+from = "/server/*"
+to = "/server/:splat"
+status = 200
+
+# Redireciona rotas não encontradas para index.html (SPA)
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200

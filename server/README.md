@@ -1,29 +1,42 @@
 # BabyShop Sync Server
 
-This lightweight server serves the existing static site and adds a small synchronization layer between the local browser `localStorage` DB (`lojaDB`) and the repository `database.json`.
+Duas opções para sincronizar dados entre dispositivos **sem alterar os scripts existentes**:
 
-Key points:
-- **No change** is made to existing `.js` files on disk. The server injects a tiny client script into HTML responses at runtime to perform sync.
-- Clients load `/api/db` and merge with `localStorage.lojaDB`. The merged DB is saved locally and posted back to the server at `/api/sync`.
+## Opção 1: Render.com (Backend Node + database.json)
 
-How to run:
+**Quando usar:** Se prefere simplicidade e quer rodar o servidor Node que já está pronto.
 
-1. Install dependencies (from project root):
+**Características:**
+- Servidor Node serve site + sincroniza `database.json` centralizado
+- Todos os dispositivos veem os mesmos dados
+- Free tier do Render
 
+**Como usar:**
+
+1. Instale dependências:
 ```bash
 cd server
 npm install
 ```
 
-2. Start the server:
-
+2. Rode localmente:
 ```bash
 npm start
+# Abra http://localhost:3000
 ```
 
-3. Open the site at `http://localhost:3000/` (the server serves files from the project root).
+3. Deploy no Render:
+   - Push para GitHub
+   - No [Render Dashboard](https://render.com): New Web Service
+   - Build command: `cd server && npm install`
+   - Start command: `cd server && npm start`
 
-Notes and limitations:
-- Merge strategy is simple: server data is the base; any array items present locally but not on the server (by `id`) are appended to the server copy.
-- The sync is optimistic: concurrent edits from different devices may need manual resolution for conflicts.
-- If you want stronger consistency, consider adding timestamps and conflict-resolution rules.
+**Limitações:**
+- `database.json` reside no servidor; redeploys podem perder dados
+- Não escalável para múltiplas instâncias
+
+---
+
+## Observação sobre Supabase
+
+Suporte à integração com Supabase foi removido nesta versão. A sincronização agora é feita por um servidor Node que persiste em `database.json` no servidor. Consulte `NETLIFY-SETUP.md` para instruções de deploy e uso do servidor local.
